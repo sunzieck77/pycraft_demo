@@ -1265,7 +1265,7 @@ button {
 }
 .content-work {
     /* background-color: red; */
-    background: url("../assets/assignment/work-desktop.png");
+    background: url("assets\assignment\work-desktop.png");
     background-size: cover;
     background-position: center;
     width: 820px;
