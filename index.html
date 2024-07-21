@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMD PYCRAFT</title>
     <link rel="shortcut icon" href="../assets/icons/SMD PYCRAFT FULLSIZE.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
@@ -184,7 +186,7 @@
             text-align: left
         }
 
-        .carbon-poweredby {
+        .carbon-powe#ec2659by {
             display: block;
             position: absolute;
             bottom: 0;
@@ -224,6 +226,82 @@
 </head>
 
 <body>
+
+    <div class="tool-zone">
+       <div class="type-variable-contain">
+            <div class="variable-type-zone">
+                <span><code style="color:aqua;">int</code> - Integer คือ ข้อมูลชนิดตัวเลขจำนวนเต็ม <br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code >x <code style=" color: #ec2659;">= -<code style="color:rgb(143 129 241);">10</code></code></code><br>
+                    <code>apple <code style="color: #ec2659;">= <code style="color: rgb(143 129 241);">12</code></code></code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">20<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+            <div class="variable-type-zone" >
+                <span><code style="color:aqua;">float</code> - Float คือ ข้อมูลชนิดตัวเลขทศนิยม <br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code >x <code style=" color: #ec2659;">= -<code style="color:rgb(143 129 241);">10.2</code></code></code><br>
+                    <code>carrot <code style="color: #ec2659;">= <code style="color: rgb(143 129 241);">12.5</code></code></code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">3.14<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+            <div class="variable-type-zone">
+                <span><code style="color:aqua;">str</code> - String คือ ข้อมูลชนิดตัวอักษรข้อความ <br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code >x <code style=" color: #ec2659;">= <code style="color:#e6db5a;">"Hello"</code></code></code><br>
+                    <code>words <code style="color: #ec2659;">= <code style="color:#e6db5a;">"How are you"</code></code></code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: #e6db5a;">"Hello Python!"<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+            <div class="variable-type-zone">
+                <span><code style="color:aqua;">bool</code> - Boolean คือ ข้อมูลชนิดค่าความจริงเท็จ <br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code >x <code style=" color: #ec2659;">= <code style="color:rgb(143 129 241);">True</code></code></code><br>
+                    <code>light_status <code style="color: #ec2659;">= <code style="color:rgb(143 129 241);">False</code></code></code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">True<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+       </div>
+        <div class="basic-zone-contain">
+            <div class="basic-zone" >
+                <span><code style="color:aqua;">Variable</code> - ตัวแปร เปรียบเหมือนกล่องเปล่า ที่สามารถเก็บข้อมูลใดได้ <br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <span style="font-style: italic; color:#b6b6b6;">ชื่อตัวแปร&nbsp;<span style="font-style: normal; color:#ec2659;"> = <span style="font-style: italic; color:#b6b6b6;">ค่าข้อมูล <br></span></span></span>
+                    <span>ตั้งชื่อตัวแปร ตามด้วยเครื่องหมายเท่ากับ เป็นการบอกว่าจะกำหนดค่าข้อมูลอะไร แล้วจึงตามด้วยข้อมูลที่ต้องการ</span> <br> <br>
+                    <code >age <code style=" color: #ec2659;">= <code style="color:rgb(143 129 241);">16</code></code></code><br>
+                    <code>number <code style="color: #ec2659;">= <code style="color:rgb(143 129 241);">32</code></code></code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">64<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+            <div class="basic-zone">
+                <span><code style="color:aqua;">print()</code> - ปริ้นต์ คำสั่งแสดงผล<br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code style="font-style: italic; color:#ec2659;">print<code style="color: white;">&#40;<code style="color:#e6db5a;">&#34;<span style="color:#898989;">ข้อความที่ต้องการ</span>&#34;<code style="color: white;">&#41;</code></code></code></code><br>
+                    <span>ใช้คำสั่ง print(" ") ข้อความที่ต้องการจะอยู่ในเครื่องหมายฟันหนูหรืออัญประกาศ หรือสามารถปริ้นต์แต่ละชนิดข้อมูลได้ดังนี้</span> <br> <br>
+                    <code style="font-style: italic; color:#898989;">#ปริ้นข้อมูลชนิดข้อความ</code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: #e6db5a;">"Hello Mr.Pieck"<code style="color: white;">&#41;</code></code></code></code><br><br>
+                    <code style="font-style: italic; color:#898989;">#ปริ้นข้อมูลชนิดตัวเลขจำนวนเต็ม</code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">22<code style="color: white;">&#41;</code></code></code></code><br><br>
+                    <code style="font-style: italic; color:#898989;">#ปริ้นข้อมูลชนิดตัวเลขทศนิยม</code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">63.5<code style="color: white;">&#41;</code></code></code></code><br><br>
+                    <code style="font-style: italic; color:#898989;">#ปริ้นข้อมูลชนิดค่าความจริงเท็จ</code><br>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: rgb(143 129 241);">True<code style="color: white;">&#41;</code></code></code></code><br>
+                </span>
+            </div>
+            <div class="basic-zone">
+                <span><code style="color:aqua;">input()</code> - อินพุต คำสั่งรับข้อมูลจากผู้ใช้<br> <span style="font-style: italic; color:#898989;">ตัวอย่าง</span> <br>
+                    <code style="font-style: italic; color:#ffffff;">age <code style="color:#ec2659;">= <code style="color: aqua;">input<code style="color: white;">&#40;<code style="color: #e6db5a;">&#34;Input your age: &#34;<code style="color: white;">&#41;</code>
+                    </code></code></code></code></code><br>
+                    <span>สร้างตัวแปรมารับข้อมูลก่อนและชื่อว่า age จากนั้นใช้เครื่องหมายเท่ากับเป็นการกำหนดค่าข้อมูล ตามด้วยคำสั่งรับข้อมูล input("") สิ่งที่อยู่ในเครื่องหมายอัญประกาศจะเป็นข้อความที่ต้องการบอกให้ผู้ใช้กรอกข้อมูลอะไร</span> <br> <br>
+                    <code>number <code style="color: #ec2659;">= <code style="color: aqua;">input<code style="color: white;">&#40;<code style="color: #e6db5a;">&#34;Input number: &#34;<code style="color: white;">&#41;</code></code></code></code></code></code>
+                    <code style="color: #ec2659;">print<code style="color: white;">&#40;<code style="color: white;">number<code style="color: white;">&#41;</code></code></code></code><br>
+                    
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- popup assignment -->
+    <div class="back-work" id="back-work" style="display: none;">
+        <div class="contain" style="display: block; ">
+            <button class="close-work" onclick="document.getElementById('back-work').style.display = 'none';">X</button>
+            <div class="content-work"></div>
+        </div>
+    </div>
     <!-- <select id="language-changer"></select> -->
     <div class="container" id="root" data-lang="python">
         <div class="spinner">
@@ -351,21 +429,21 @@
             <div class="mobile-top-bar clearfix">
                 <div class="pills-wrapper">
                     <div class="pills clearfix">
-                        <button class="pill active compiler-pill">
-              main.py            </button>
-                        <button class="pill shell-pill">
-              Output            </button>
+                        <button class="pill active compiler-pill">main.py</button>
+                        <button class="pill shell-pill">Output</button>
                     </div>
+                </div>
+                <div class="option-wrapper">
+                    <button type="button" id="assignment-work-mobile" onclick="document.getElementById('back-work').style.display = 'flex';"></button>
                 </div>
 
                 <!-- Change the position of option wrapper which contain dark mode toggle and share in mob view -->
 
                 <div class="other-options-wrapper">
                     <!-- <div id="feedback-mobile" class="options-item-wrapper">
-              <a href="https://programiz.com/contact" class="options-item">
-                <img class="svg" src="./assets/icons/message-square.svg" />
-              </a>
-            </div> -->
+                        <button>TEXT</button>
+                    </div> -->
+                    
                     <div class="mobile-top-bar-run-button run">
 
                         <img src="./assets/icons/play.svg" alt="run-icon" />
@@ -373,29 +451,20 @@
                 </div>
             </div>
             <div class="sidebar-wrapper">
-           
+                <button class="type-variable" style="margin-top:40px;">ชนิดข้อมูล</button>
+                <button class="basic">พื้นฐาน</button>
+                <button class="logic">ตรรกะ</button>
+                <button class="loop">วนหลูป</button>
             </div>
             <div class="editor-wrapper">
                 <div class="editor-desktop-top-bar">
-                    <div class="file-name">
-                        main.py </div>
+                    <div class="file-name">main.py</div>
                     <div class="desktop-top-bar__btn-wrapper">
-                        <!-- <button type="button" id="toggle-dark-mode-desktop" title="Toggle dark mode">
-                          <img class="toggle-dark-mode-mobile-icon moon svg" src="./assets/icons/moon.svg" />
-                          <img class="toggle-dark-mode-mobile-icon sun svg" src="./assets/icons/sun.svg" />
-                        </button> -->
-                        <!-- Change first none to flex to re-enable the save button -->
-                        <!--  Uncomment this if require in future -->
-                        <!-- <button class="desktop-save-button"
-                            style="display: block">
-
-                            <span>
-                                &nbsp;Save&nbsp;
-                            </span>
-                        </button> -->
+                        <button type="button" id="assignment-work-desktop" onclick="document.getElementById('back-work').style.display = 'flex';">WORK</button>
                         <button class="desktop-run-button run">
                           <span class="run-text">&nbsp;▶ RUN&nbsp;</span>
                         </button>
+                 
                     </div>
                 </div>
                 <button class="mobile-run-button run">▶ RUN</button>
@@ -408,7 +477,7 @@
                         Output </div>
                     <div class="terminal-desktop-top-bar__btn-wrapper">
                         <button class="desktop-clear-button">
-              &nbsp;Clear&nbsp;
+              &nbsp;CLEAR&nbsp;
             </button>
                     </div>
                 </div>
@@ -448,7 +517,7 @@
         desktopAdsButton.target = "_blank"
         mobileAdsButton.target = "_blank"
     </script>
-    <!-- The use of the cloudflare cdn for all external libraries is intential. We are trying to reduce the number
+    <!-- The use of the cloudflare cdn for all external libraries is intential. We are trying to #ec2659uce the number
          of DNS lookups.
     -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>

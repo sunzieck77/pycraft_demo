@@ -1,3 +1,6 @@
+
+
+
 ! function(e) {
     var t = {};
 
@@ -288,6 +291,8 @@
         n.inherits(r, i),
             function() {}.call(r.prototype), t.Mode = r
     }));
+
+
     const k = ace.edit("editor"),
         x = ace.edit("terminal");
     let y = $("#root").data("lang") || c.DEFAULT_LANGUAGE,
@@ -300,6 +305,10 @@
         k.setOptions({
             fontFamily: "droid_sans_monoregular",
             fontSize: "14px",
+            wrap: true,
+            useSoftTabs: true,
+            tabSize: 4,
+            displayIndentGuides: true,
             showGutter: !0,
             highlightActiveLine: !0,
             wrap: !0,
@@ -308,9 +317,9 @@
             tooltipFollowsMouse: !1,
             maxLines: t,
             dragEnabled: !1,
-            showPrintMargin: !1
+            showPrintMargin: !1,
         }), k.container.style.lineHeight = "22px", x.setOptions({
-            fontFamily: "droid_sans_monoregular",
+            fontFamily: "Monocraft, droid_sans_monoregular",
             fontSize: "14px",
             showGutter: !1,
             highlightActiveLine: !1,
@@ -325,7 +334,19 @@
             showPrintMargin: !1,
             displayIndentGuides: !1
         }), x.container.style.lineHeight = "22px"
+
+        
     };
+    
+    
+
+
+
+
+
+
+
+
     L(), $(window).resize(L);
     let T = !1;
     const P = new URLSearchParams(window.location.search).get("ref");
@@ -341,8 +362,8 @@
     k.commands.addCommand({
         name: "executeCode",
         bindKey: {
-            win: "Ctrl-Enter",
-            mac: "Cmd-Enter|Ctrl-Enter"
+            win: "Alt-Enter",
+            mac: "Cmd-Enter|Alt-Enter"
         },
         exec: function() {
             return $(".run").is(":disabled") || I(), !1
@@ -416,7 +437,7 @@
         name: "newLine",
         bindKey: {
             win: "Enter",
-            mac: "Enter"
+            mac: "Enter|Ctrl-Enter"
         },
         exec: () => (O = x.getValue().slice(A.length), E.emit("evaluate", {
             code: O
@@ -592,3 +613,72 @@
     })
 }]);
 
+
+
+
+// Select the focusable elements
+const typeVariableButton = document.querySelector('.type-variable');
+const basicButton = document.querySelector('.basic');
+
+// Select the zones to show/hide
+const variableTypeZone = document.querySelector('.type-variable-contain');
+const basicZone = document.querySelector('.basic-zone-contain');
+const toolZone = document.querySelector('.tool-zone');
+
+// Function to show variableTypeZone and hide basicZone
+function showVariableTypeZone() {
+    variableTypeZone.style.display = 'flex';
+    variableTypeZone.style.flexDirection = 'column';
+    toolZone.style.display = 'block'; 
+    basicZone.style.display = 'none';
+}
+
+// Function to show basicZone and hide variableTypeZone
+function showBasicZone() {
+    basicZone.style.display = 'flex';
+    basicZone.style.flexDirection = 'column'; 
+    toolZone.style.display = 'block'; 
+    variableTypeZone.style.display = 'none';
+}
+
+// Function to hide toolZone if no buttons are focused
+function hideToolZone() {
+    if (document.activeElement !== typeVariableButton && document.activeElement !== basicButton) {
+        toolZone.style.display = 'none';
+    }
+}
+
+// Add event listeners for the focus event
+typeVariableButton.addEventListener('focus', showVariableTypeZone);
+basicButton.addEventListener('focus', showBasicZone);
+
+// Add event listeners for the blur event
+typeVariableButton.addEventListener('blur', hideToolZone);
+basicButton.addEventListener('blur', hideToolZone);  
+
+
+// Function to check the media query and apply styles
+function checkMediaQuery() {
+    const mediaQuery = window.matchMedia('(max-width: 800px)');
+    const toolZone = document.querySelector('.tool-zone');
+
+    // Function to handle media query changes
+    function handleMediaQueryChange(e) {
+        if (e.matches) {
+            // If the media query matches, hide the tool zone
+            toolZone.style.display = 'none';
+        } else {
+            // Otherwise, show the tool zone
+            toolZone.style.display = 'none'; // or whatever display style you need
+        }
+    }
+
+    // Initial check
+    handleMediaQueryChange(mediaQuery);
+
+    // Listen for media query changes
+    mediaQuery.addListener(handleMediaQueryChange);
+}
+
+// Call the function on page load
+checkMediaQuery();
