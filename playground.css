@@ -1265,7 +1265,7 @@ button {
 }
 .content-work {
     /* background-color: red; */
-    background: url("assets\assignment\work-desktop.png");
+    background: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/assignment/work-desktop.png");
     background-size: cover;
     background-position: center;
     width: 820px;
@@ -1428,7 +1428,7 @@ button {
     
     .content-work {
         /* background-color: red; */
-        background: url("../assets/assignment/work-mobile.png");
+        background: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/assignment/work-mobile.png");
         background-size: cover;
         background-position: center;
         width: 580px;
