@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMD PYCRAFT</title>
-    <link rel="shortcut icon" href="../assets/icons/SMD PYCRAFT FULLSIZE.png" />
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/icons/SMD PYCRAFT FULLSIZE.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
     <link rel="canonical" href="https://www.programiz.com/python-programming/online-compiler/" />
     <meta name="description" content="Write and run your Python code using our online compiler. Enjoy additional features like code sharing, dark mode, and support for multiple programming languages." />
@@ -227,6 +227,30 @@
 
 <body>
 
+    
+    <div class="class-content-popup" id="class-content-popup">
+        <div class="class-form">
+            <div class="dropdown">
+                <div class="form-title">
+                    <span>SMD PYCRAFT ยินดีต้อนรับ</span>
+                </div>
+                <div class="dropdown-form">
+                    <div style="display: flex;">
+                        <input class="input-name" id="input-name" type="text" placeholder="ชื่อ-สกุล" required>
+                        <input class="input-no" id="input-no" type="text" placeholder="เลขที่" required>
+                    </div>
+                    <div style="display: flex;">
+                        <input class="input-pass" id="input-pass" type="text" placeholder="โค้ดลับ (ไม่จำเป็น)" required>
+                    </div>
+                </div>
+                <div style="display: flex;">
+                    <button class="submit-input" onclick="submit_input()">เรียบร้อย</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="tool-zone">
        <div class="type-variable-contain">
             <div class="variable-type-zone">
@@ -409,7 +433,7 @@
                     </div>
                     <div class="logo-wrapper">
                       <img src="assets\logos\python logo.png" alt="" class="python-logo">
-                      <span class="logo-sub-title" style="margin-left: 10px;">วิทยาการคํำควณ</span>
+                      <span class="logo-sub-title" style="margin-left: 10px;">วิทยาการคํำนวณ</span>
                     </div>
                 </div>
                 <div class="compiler-header-ad">
@@ -467,6 +491,7 @@
                  
                     </div>
                 </div>
+                <div class="student-name-div" style="color: #898989;">งานนี้เป็นของ: <span onclick="document.getElementById('class-content-popup').style.display = 'flex'" class="student-name" id="student-name" >Mr. Pieck เลขที่ 99</span></div>
                 <button class="mobile-run-button run">▶ RUN</button>
                 <div id="editor">print("NICE TO MEET YOU AGAIN")</div>
             </div>

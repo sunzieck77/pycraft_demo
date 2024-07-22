@@ -1228,6 +1228,150 @@ button {
 /* --------------------------------------------------------------------------------------------- */
 /* ----------------------------------------CUSTOM ZONE------------------------------------------ */
 /* --------------------------------------------------------------------------------------------- */
+
+.class-content-popup {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.77);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.class-form {
+    margin-left:35px ;
+    margin-right:35px ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 600px;
+    height: 340px;
+    background-color:#262423;
+    border-radius: 5px;
+    border: 3px solid white;
+}
+.dropdown {
+    width: 100%;
+    height: 96%;
+    background-color: #333333;
+    border-radius: 5px;
+    border-left:5px solid rgb(122, 122, 122) ;
+    border-top:5px solid rgb(122, 122, 122) ;
+    border-right:7px solid rgb(23, 23, 23) ;
+    border-bottom:7px solid rgb(27, 27, 27) ;
+}
+
+.dropdown-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.dropdown .form-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 50px;
+    font-family: "2005_iannnnnCPU";
+    color: #3b3b3b;
+    background-color: rgb(220, 220, 220);
+}
+
+
+.input-name{
+    box-sizing: border-box;
+    width: 80%;
+    margin: 20px;
+    margin-top: 40px;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Noto Sans Thai";
+    background-color: #2a2a2a;
+    border: 0;
+    outline: 0;
+    color: white;
+
+}
+.input-no{
+    box-sizing: border-box;
+    width: 20%;
+    margin-top: 40px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Noto Sans Thai";
+    background-color: #2a2a2a;
+    border: 0;
+    outline: 0;
+    color: white;
+}
+
+.input-pass{
+    box-sizing: border-box;
+    width: 100%;
+    margin-right: 20px;
+    margin-left: 20px;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Noto Sans Thai";
+    background-color: #2a2a2a;
+    border: 0;
+    outline: 0;
+    color: white;
+}
+
+.input-name:focus, .input-no:focus, .input-pass:focus {
+    border: 2px solid white;
+}
+
+.submit-input {
+    width: 100%;
+    font-family: "2005_iannnnnCPU";
+    font-size: 45px;
+    color: #999999;
+    margin: 20px;
+    height: 60px;
+    background-color: #444444;
+    border: 4px solid rgb(49, 49, 49);
+    border-bottom: 4px solid rgb(23, 23, 23);
+}
+
+.student-name-div {
+    font-family: "Noto Sans Thai";
+    padding: 6px;
+    font-size: 13px;
+}
+
+.student-name {
+    color: rgb(182, 182, 182);
+}
+
+.student-name:hover {
+    color: white;
+}
+
+.submit-input:hover {
+    color: #ffffff;
+    background-color:#3c8527;
+    border: 4px solid #72df4b;
+    border-bottom: 4px solid rgb(23, 105, 50);
+}
+
 .tool-zone::-webkit-scrollbar{
     width: 10px;
     background-color: rgb(21, 21, 21);
@@ -1265,7 +1409,7 @@ button {
 }
 .content-work {
     /* background-color: red; */
-    background: url("../assets/assignment/work-desktop.png");
+    background: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/assignment/work-desktop.png");
     background-size: cover;
     background-position: center;
     width: 820px;
@@ -1290,6 +1434,7 @@ button {
 }
 
 #assignment-work-desktop {
+    display: none;
     font-family: "Monocraft";
     cursor: pointer;
     padding: 6px 16px;
@@ -1318,6 +1463,7 @@ button {
     background-color: #5c5c5c;
 }
 #assignment-work-mobile {
+    display: none;
     font-family: "Monocraft";
     cursor: pointer;
     padding: 6px 16px;
@@ -1327,7 +1473,7 @@ button {
     border-bottom: 2px solid #000000;
     box-sizing: border-box;
     background-color: #3d3938;
-    background: url("../assets/icons/Enchanted_Book.gif");
+    background: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/icons/Enchanted_Book.gif");
     background-position: center;
     background-size: 30px 30px;
     background-repeat: no-repeat;
@@ -1425,10 +1571,36 @@ button {
 
 @media screen and (max-width: 800px) {
     
-    
+    .dropdown .form-title {
+        font-size: 34px;
+        height: 40px;
+    }
+
+    .class-form {
+        width: 400px;
+        height: 290px;
+    }
+
+    .input-name {
+        width: 70%;
+        height: 40px;
+        font-size: 12px;
+    }
+    .input-no {
+        width: 30%;
+        height: 40px;
+        font-size: 12px;
+    }
+
+    .input-pass {
+        width: 100%;
+        height: 40px;
+        font-size: 12px;
+    }
+
     .content-work {
         /* background-color: red; */
-        background: url("../assets/assignment/work-mobile.png");
+        background: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/assignment/work-mobile.png");
         background-size: cover;
         background-position: center;
         width: 580px;

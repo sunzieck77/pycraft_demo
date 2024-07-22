@@ -682,3 +682,24 @@ function checkMediaQuery() {
 
 // Call the function on page load
 checkMediaQuery();
+
+
+function submit_input() {
+    var name = document.getElementById('input-name');
+    var no = document.getElementById('input-no');
+    var workname = document.getElementById('student-name'); 
+    var code = document.getElementById('input-pass');
+    document.getElementById('class-content-popup').style.display = 'none';
+    workname.innerHTML = name.value + " เลขที่ " + no.value;
+    if (code.value == "m1" || code.value == "M1") {
+        workbtn_desktop = document.getElementById('assignment-work-desktop')
+        workbtn_mobile = document.getElementById('assignment-work-mobile')
+
+        workbtn_desktop.style.display = "block"
+        workbtn_mobile.style.display = "block"
+    }
+    else {
+        workbtn_desktop.style.display = "none"
+        workbtn_mobile.style.display = "none"
+    }
+}
