@@ -3038,22 +3038,33 @@ button[disabled] {
     z-index: -1;
     background-color: red;
     background: url('https://i.gifer.com/1er8.gif');
-    background-size: 80px 80px;
+    background-size: 50px 50px;
 }
+
+
 
 /* Grid item styling */
 .grid-item {
     width: var(--grid-size2);
     height: var(--grid-size2);
     background-color: #5d8f23;
-    background: url('https://minecraft.wiki/images/thumb/Grass_Block_%28carried_top_texture%29_BE2.png/120px-Grass_Block_%28carried_top_texture%29_BE2.png?f52cb');
-    background-size: 70px 70px;
+    background-size: cover;
     background-repeat: no-repeat;
     box-sizing: border-box;
     position: relative;
-    /* border: 1px solid #36470a; */
-    border: 1px solid #324a14;
+    border: 1px solid #383838;
+    background-image: url('https://minecraft.wiki/images/thumb/Grass_Block_%28carried_top_texture%29_BE2.png/120px-Grass_Block_%28carried_top_texture%29_BE2.png?f52cb');
+    /* background-image: url('https://lh3.bunny.novaskin.me/r6hcRC36CzWCl30MUbabHMUI_KT_yFarwA2bFmBMnvYJ4KpesmjTQvGM_-5rn64JbJYzQRf7N8rYrm0q_BE'); */
+    
 }
+
+
+.lava-block {
+    background-image: url('https://i.gifer.com/1er8.gif');
+    background-size: 50px 50px;
+    background-position: center;
+}
+
 
 .grid-item.active {
     border: 2px solid white; /* White border for active grid item */

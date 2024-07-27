@@ -1,6 +1,3 @@
-
-
-
 ! function(e) {
     var t = {};
 
@@ -740,7 +737,7 @@ function submit_input() {
 }
 
 // ---------------------------------------------------------------------------------------------------------------- GAME FUNCTION
-const colors = ['#5d8f23', '#5a8b22', '#537f1f', '#4d761d', '#548120', '#53801f', '#527f1f', '#4e781d'];
+
 const gridSize = 12;
 let stevePosition = { x: 0, y: 0 };
 let direction = 'right';
@@ -753,6 +750,7 @@ let loopCounter = 0; // Counter for loops
 
 const movespeed = 300; // 3 ms
 
+
 let score = 0;
 let foodItems = [];
 const foodTypes = [
@@ -762,18 +760,106 @@ const foodTypes = [
     { type: 'Golden Apple', points: 4, fullness: 4, displayTime: 80000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/golden-apple.gif' }
 ];
 
+// Textures based on score thresholds
+const textures = {
+    5: [
+        'https://i.pinimg.com/236x/63/e1/81/63e181479262a3638cbaeb4efdb925b8--banquet-minecraft.jpg',
+        'https://i.ibb.co/R334St7/Andesite-texture.png'
+    ],
+    8: [
+        'https://i.pinimg.com/236x/63/e1/81/63e181479262a3638cbaeb4efdb925b8--banquet-minecraft.jpg',
+        'https://i.ibb.co/R334St7/Andesite-texture.png',
+        'https://i.ibb.co/MCTf9xt/coal-ore-texture.png'
+    ],
+    10: [
+        'https://i.pinimg.com/236x/63/e1/81/63e181479262a3638cbaeb4efdb925b8--banquet-minecraft.jpg',
+        'https://i.ibb.co/R334St7/Andesite-texture.png',
+        'https://i.ibb.co/MCTf9xt/coal-ore-texture.png',
+        'https://i.ibb.co/7jzn4Qg/iron-ore-texture.png'
+    ],
+    30: [
+        'https://i.ibb.co/p28Pwz3/deep-stone-texture.png',
+        'https://i.ibb.co/TPRDz4F/deep-diamond-texture.jpg',
+        'https://i.ibb.co/b3yxFrF/sculk-texture.png'
+    ],
+    33: [
+        'https://i.ibb.co/b3yxFrF/sculk-texture.png'
+    ]
+};
+
+
 // Create the grid
 function createGrid() {
     const grid = document.getElementById('grid');
     for (let i = 0; i < gridSize * gridSize; i++) {
         const div = document.createElement('div');
         div.className = 'grid-item';
-        // div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         grid.appendChild(div);
     }
 }
 
-// Spawn food items
+// Turn some blocks into lava blocks based on the score
+function updateBlocksForChallenge() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    const maxLavaBlocks = 5;
+    
+    // Remove previous lava blocks
+    gridItems.forEach(item => {
+        item.classList.remove('lava-block');
+        item.style.backgroundImage = ''; // Clear background image for non-lava blocks
+    });
+
+    if (score > 8) {
+        const lavaBlocks = new Set(); // To ensure no duplicate blocks
+
+        while (lavaBlocks.size < maxLavaBlocks) {
+            const randomIndex = Math.floor(Math.random() * gridItems.length);
+            lavaBlocks.add(randomIndex);
+        }
+
+        lavaBlocks.forEach(index => {
+            const gridItem = gridItems[index];
+            gridItem.classList.add('lava-block');
+            gridItem.style.backgroundImage = 'url("https://i.gifer.com/1er8.gif")';
+            gridItem.style.backgroundPosition = 'center';
+            gridItem.style.backgroundSize = 'cover';
+            gridItem.style.backgroundRepeat = 'no-repeat';
+        });
+    }
+}
+
+function updateGroundTexture(score) {
+    let applicableTextures = [];
+
+    if (score > 33) {
+        applicableTextures = textures[33];
+    } else if (score > 30) {
+        applicableTextures = textures[30];
+    } else if (score > 10) {
+        applicableTextures = textures[10];
+    } else if (score > 8) {
+        applicableTextures = textures[8];
+    } else if (score > 5) {
+        applicableTextures = textures[5];
+    } else {
+        return;
+    }
+
+    console.log('Score received:', score);
+    console.log('Applicable textures:', applicableTextures);
+
+    const gridItems = document.querySelectorAll('.grid-item');
+
+    gridItems.forEach(item => {
+        if (!item.classList.contains('lava-block')) { // Ensure lava blocks are not overwritten
+            const randomTexture = applicableTextures[Math.floor(Math.random() * applicableTextures.length)];
+            console.log('Setting background image to:', `url(${randomTexture})`);
+            item.style.backgroundImage = `url(${randomTexture})`;
+        }
+    });
+}
+
+
 
 
 const maxFoodItems = 6; // Maximum number of food items in the area
@@ -793,10 +879,23 @@ function spawnFood() {
     // Spawn new food items up to the maximum allowed
     let foodCount = maxFoodItems - existingFoodItems.length; // Number of new food items to spawn
 
+    const gridItems = document.querySelectorAll('.grid-item');
+    const lavaBlocks = new Set(
+        Array.from(gridItems).filter(item => item.classList.contains('lava-block'))
+            .map((item, index) => Array.from(gridItems).indexOf(item))
+    );
+
     while (foodCount > 0) {
         const foodType = foodTypes[Math.floor(Math.random() * foodTypes.length)];
-        const x = Math.floor(Math.random() * gridSize);
-        const y = Math.floor(Math.random() * gridSize);
+        let x, y;
+        let gridItemIndex;
+
+        // Find a suitable grid item that is not a lava block and does not already have a food item
+        do {
+            x = Math.floor(Math.random() * gridSize);
+            y = Math.floor(Math.random() * gridSize);
+            gridItemIndex = y * gridSize + x;
+        } while (lavaBlocks.has(gridItemIndex) || gridItems[gridItemIndex].querySelector('.food-item'));
 
         const food = document.createElement('div');
         food.className = 'food-item';
@@ -813,8 +912,8 @@ function spawnFood() {
         timer.className = 'food-timer';
         food.appendChild(timer);
         
-        // Position the food item randomly in the grid
-        const gridItem = document.querySelector(`.grid-item:nth-child(${y * gridSize + x + 1})`);
+        // Position the food item in the selected grid item
+        const gridItem = gridItems[gridItemIndex];
         gridItem.appendChild(food);
 
         // Start the timer for the food item
@@ -835,10 +934,10 @@ function spawnFood() {
     }
 }
 
+
 // Update hunger status
 function updateHungerStatus() {
     document.getElementById('current-score').innerText = `Score: ${score}`;
-    // document.getElementById('hunger-image').src = `https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-${fullness}.png`;
     document.getElementById('hunger-image').src = `https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-${fullness}.png`;
     if (fullness <= 0) {
         gameOver();
@@ -869,6 +968,9 @@ function collectFood(foodItem) {
     score += points;
     fullness = Math.min(10, fullness + fullnessValue); // Increase fullness, cap at 10
     updateHungerStatus();
+    updateBlocksForChallenge();
+    updateGroundTexture(score); 
+  
 
     // Track collected items
     if (!collectedItems[foodType]) {
@@ -879,14 +981,6 @@ function collectFood(foodItem) {
 
     // Update display
     updateCollectedItems();
-
-    // Remove the food item and its timer
-    // const gridItem = foodItem.parentElement;
-    // const timer = gridItem.querySelector('.food-timer');
-    // if (timer) {
-    //     gridItem.removeChild(timer);
-    // }
-    // gridItem.removeChild(foodItem);
 }
 
 // Handle food click event
@@ -981,9 +1075,15 @@ function processCommands() {
 
 
 function collectFoodIfPresent() {
-    const currentIndex = stevePosition.y * gridSize + stevePosition.x + 1;
-    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex})`);
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x;
+    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex + 1})`);
     const foodItem = gridItem.querySelector('.food-item');
+    
+    // Check if current position is a lava block
+    if (gridItem.classList.contains('lava-block')) {
+        gameOver(); // End the game if on a lava block
+        return;
+    }
 
     if (foodItem) {
         collectFood(foodItem);
@@ -992,6 +1092,15 @@ function collectFoodIfPresent() {
     }
 }
 
+// Check if Steve is on a lava block
+function checkForLavaBlock() {
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x + 1;
+    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex})`);
+    
+    if (gridItem.classList.contains('lava-block')) {
+        gameOver(); // End game if Steve is on a lava block
+    }
+}
 
 
 // Move Steve forward based on direction
@@ -1036,7 +1145,9 @@ function moveForward() {
 
     placeSteve();
     collectFoodIfPresent();
+    checkForLavaBlock(); // Check if Steve is on a lava block
 }
+
 
 // Move Steve backward based on direction
 function moveBackward() {
@@ -1080,6 +1191,7 @@ function moveBackward() {
 
     placeSteve();
     collectFoodIfPresent();
+    checkForLavaBlock(); // Check if Steve is on a lava block
 }
 
 // Turn Steve right
@@ -1126,8 +1238,6 @@ let fullnessInterval; // Declare a variable to store the interval ID
 
 // Start the game
 function startGame() {
-    
-
     let lavaArea = document.querySelector(".lavaArea");
     if (!gameStarted) {
         fullness = 10;
@@ -1136,9 +1246,11 @@ function startGame() {
         createGrid();
         placeSteve();
         spawnFood(); // Start spawning food
+        updateBlocksForChallenge(); // Update lava blocks based on score
+
         fullnessInterval = setInterval(() => {
             if (fullness > 0) {
-                fullness-=0.5;
+                fullness -= 0.5;
                 updateHungerStatus();
             }
         }, fullnessSpeed); // Every 5 seconds
@@ -1147,8 +1259,8 @@ function startGame() {
         document.getElementById('hunger-image').style.display = 'block'; // Show hunger status image
         gameStarted = true;
     }
-   
 }
+
 
 function exitGame(){
 
