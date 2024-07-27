@@ -1685,6 +1685,8 @@ button {
 }
 
 
+
+
 /* --------------------------------------------------------------------------------------------- */
 /* --------------------------------------------------------------------------------------------- */
 /* --------------------------------------------------------------------------------------------- */
@@ -2985,3 +2987,399 @@ button[disabled] {
 }
 
 /* End  share code css*/
+
+
+/* .................................................................................................. GAME FUNCTION */
+:root {
+    --grid-size1: 12; /* Number of grid cells per side */
+    --grid-size2: 35px; /* Size of each grid cell (larger block) */
+    --steve-size-h: 65px; /* Size of Steve's rectangle */
+    --steve-size-w: 8px; /* Size of Steve's rectangle */
+    --triangle-size: 20px; /* Size of the triangle inside Steve */
+}
+/* Container styling */
+.minecraft-container {
+    /* background-color: #000000b1; */
+    /* width: 40%;
+    height: 80%; */
+    left: 55%;
+    top: 220px;
+    position: absolute;
+    z-index: 110;
+    display: none;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+/* Grid styling */
+#grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size1), var(--grid-size2));
+    grid-template-rows: repeat(var(--grid-size1), var(--grid-size2));
+    background-color: #5d8f23;
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/pycraft-game.png');
+    background-position: center;
+    background-size: cover;
+    padding: 0;
+    margin: 0;
+}
+
+.lavaArea {
+    position: absolute;
+    bottom: 45px;
+    left: -15px;
+    content: '';
+    width: 450px;
+    height: 450px;
+    z-index: -1;
+    background-color: red;
+    background: url('https://i.gifer.com/1er8.gif');
+    background-size: 80px 80px;
+}
+
+/* Grid item styling */
+.grid-item {
+    width: var(--grid-size2);
+    height: var(--grid-size2);
+    background-color: #5d8f23;
+    background: url('https://minecraft.wiki/images/thumb/Grass_Block_%28carried_top_texture%29_BE2.png/120px-Grass_Block_%28carried_top_texture%29_BE2.png?f52cb');
+    background-size: 70px 70px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    position: relative;
+    /* border: 1px solid #36470a; */
+    border: 1px solid #324a14;
+}
+
+.grid-item.active {
+    border: 2px solid white; /* White border for active grid item */
+}
+
+/* Steve's rectangle styling */
+.steve {
+    width: var(--steve-size-w);
+    height: var(--steve-size-h);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-position: center;
+    background-size: cover;
+    /* background-color: yellow;  */
+    border-radius: 0; /* Ensure it's a rectangle */
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 112;
+}
+
+/* Triangle inside the rectangle */
+.steve::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: var(--triangle-size) solid transparent;
+    border-right: var(--triangle-size) solid transparent;
+    /* border-bottom: var(--triangle-size) solid red;  */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s;
+}
+
+/* Default direction - facing right */
+.steve.right::before {
+    width: var(--steve-size-w);
+    height: var(--steve-size-h);
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-right.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Facing left */
+.steve.left::before {
+    width: var(--steve-size-w);
+    height: var(--steve-size-h);
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-left.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Facing up */
+.steve.up::before {
+    width: var(--steve-size-w);
+    height: var(--steve-size-h);
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-up.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Facing down */
+.steve.down::before {
+    width: var(--steve-size-w);
+    height: var(--steve-size-h);
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-down.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* Textarea styling */
+.text-area {
+    margin-top: 20px;
+}
+
+/* Yellow point styling */
+.yellow-point {
+    width: 10px;
+    height: 10px;
+    background-color: yellow;
+    border-radius: 50%; /* Makes it a circle */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* Hunger status styling */
+#hunger-status {
+    margin-top: 20px;
+    
+}
+
+#hunger-image {
+    /* background-color: red; */
+    width: 400px;
+    height: 60px;
+    position: relative;
+    right: 95px;
+}
+
+/* Food container styling */
+#food-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.food-item {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.food-timer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 2px;
+    top: 20px;
+    font-size: 12px;
+}
+
+
+/* Popup modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 113; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,.6); /* Black w/ opacity */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #333333;
+    border-left:5px solid rgb(122, 122, 122) ;
+    border-top:5px solid rgb(122, 122, 122) ;
+    border-right:7px solid rgb(23, 23, 23) ;
+    border-bottom:7px solid rgb(27, 27, 27) ;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: rgb(63, 63, 63);
+    font-family: "2005_iannnnnCPU";
+    font-size: 50px;
+    margin: 0;
+    padding: 0;
+    background-color: #dedede;
+}
+
+
+
+#score {
+    font-family: "Monocraft","Noto Sans Thai";
+    color: white;
+    font-size: 25px;
+    margin: 20px 0;
+}
+
+#restart-button, #home-button, #exit-button {
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 113; 
+
+    /* width: 100%; */
+    font-family: "2005_iannnnnCPU";
+    font-size: 45px;
+    color: #999999;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 60px;
+    background-color: #444444;
+    border: 4px solid rgb(49, 49, 49);
+    border-bottom: 4px solid rgb(23, 23, 23);
+}
+
+#restart-button:hover, #home-button:hover, #exit-button:hover {
+    color: #ffffff;
+    background-color:#3c8527;
+    border: 4px solid #72df4b;
+    border-bottom: 4px solid rgb(37, 60, 6);
+ 
+}
+#restart-button:active, #home-button:active, #exit-button:active {
+    color: #ffffff;
+    background-color:#144606;
+    border: 4px solid rgb(28, 47, 4);
+    /* border-bottom: 4px solid #357c1b ; */
+    font-size: 45px;
+}
+
+
+/* Style for the start button */
+#start-button {
+    position: relative;
+    right: 94px;
+    cursor: pointer;
+    
+    font-size: 16px;
+    z-index: 113;  
+    
+    width: 200px;
+    font-family: "2005_iannnnnCPU";
+    font-size: 45px;
+    color: #ffffff;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 60px;
+    background-color: #ffa400;
+    text-shadow: 2px 2px 2px black;
+    border: 4px solid rgb(255, 251, 175);
+    border-bottom: 4px solid rgb(57, 43, 12);
+}
+
+#start-button:hover {
+    /* background-color: #45a049; */
+    color: #ffffff;
+    background-color:#3c8527;
+    border: 4px solid #72df4b;
+    border-bottom: 4px solid rgb(40, 85, 30);
+}
+
+.status {
+    font-family: "Monocraft","Noto Sans Thai";
+    padding-left: 20px;
+    padding-right: 20px;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    width: 140px;
+}
+
+.status p,
+.status ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#items-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
+    /* background-color: green; */
+}
+
+#items-list li {
+    /* flex-direction: column  ; */
+    display: flex;
+    /* align-items: center; */
+    width: 180px;
+    /* margin-right: 10px; */
+    /* background-color: red; */
+    color: white;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    margin-top: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.519);
+    /* padding: 5px; */
+    /* border-radius: 5px; */
+    /* box-shadow: 0 2px 4px rgba(255, 255, 255); */
+}
+
+#items-list .foodScoreLabel {
+    margin-top: 5px;
+    opacity: .6;
+}
+
+#items-list img {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+}
+
+#current-score {
+    font-size: 18px;
+    margin-bottom: 14px;
+}
+#collected-items {
+    opacity: .7;
+    font-size: 13px;
+}

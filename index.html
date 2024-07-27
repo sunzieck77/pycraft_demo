@@ -227,6 +227,42 @@
 
 <body>
 
+    <!-- minecraft game  -->
+    <div class="minecraft-container" id="minecraft-content">
+        <div class="info-content" style="display: flex;">
+            <div id="grid"></div>
+            <div class="status" style="color: white;">
+                <p id="current-score">Score: 0</p>
+                <p id="collected-items">Collected Items:</p>
+                <ul id="items-list"></ul>
+            </div>
+            <div class="lavaArea"></div>
+        </div>
+        <div class="info">
+            <button id="start-button">เริ่มเกม</button>
+            <!-- <img id="hunger-image" src="https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-10.png" alt="Hunger Status" style="display: none;"> -->
+            <img id="hunger-image" src="https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-10.png" alt="Hunger Status" style="display: none;">
+        </div> 
+
+        <!-- The Modal -->
+        <div id="scoreModal" class="modal">
+            <div class="modal-content">
+                <h1 class="modal-header">GAME OVER</h1>
+                <!-- <span class="close" onclick="closeModal()">&times;</span> -->
+                <p id="score">Your score: 0</p>
+                <button id="restart-button" onclick="restartGame()">เริ่มใหม่</button>
+                <button id="home-button" onclick="backHome()">หน้าหลัก</button>
+                <button id="exit-button" onclick="exitGame()">ออกเกม</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    
     
     <div class="class-content-popup" id="class-content-popup">
         <div class="class-form">
@@ -485,7 +521,7 @@
                     <div class="file-name">main.py</div>
                     <div class="desktop-top-bar__btn-wrapper">
                         <button type="button" id="assignment-work-desktop" onclick="document.getElementById('back-work').style.display = 'flex';">WORK</button>
-                        <button class="desktop-run-button run">
+                        <button class="desktop-run-button run" onclick="executeCommand()">
                           <span class="run-text">&nbsp;▶ RUN&nbsp;</span>
                         </button>
                  
@@ -493,7 +529,7 @@
                 </div>
                 <div class="student-name-div" style="color: #898989;">งานนี้เป็นของ: <span onclick="document.getElementById('class-content-popup').style.display = 'flex'" class="student-name" id="student-name" >Mr. Pieck เลขที่ 99</span></div>
                 <button class="mobile-run-button run">▶ RUN</button>
-                <div id="editor">print("NICE TO MEET YOU AGAIN")</div>
+                <div id="editor" contenteditable="true">print("NICE TO MEET YOU AGAIN")</div>
             </div>
 
             <div class="terminal-wrapper">

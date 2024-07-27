@@ -405,7 +405,11 @@
     E.on("output", ({ output: e }) => {
         t();
         e = e.split(">>>").join(">");
-
+        // clearconsole
+        if (gameStarted) {
+            k.setValue("");
+        }
+        
         // Remove the completion message if it exists
         const completionMessage = "=== Code Execution Successful ===";
         if (e.includes(completionMessage)) {
@@ -685,21 +689,586 @@ checkMediaQuery();
 
 
 function submit_input() {
+    
+    let lavaArea = document.querySelector('.lavaArea');
     var name = document.getElementById('input-name');
     var no = document.getElementById('input-no');
     var workname = document.getElementById('student-name'); 
     var code = document.getElementById('input-pass');
+
+    let stevehunger = document.querySelector('.minecraft-container');
+    let supportMedia_W = window.matchMedia("(min-width:1300px)");
+    let supportMedia_H = window.matchMedia("(min-height:720px)");
+
+
     document.getElementById('class-content-popup').style.display = 'none';
     workname.innerHTML = name.value + " เลขที่ " + no.value;
     if (code.value == "m1" || code.value == "M1") {
         workbtn_desktop = document.getElementById('assignment-work-desktop')
         workbtn_mobile = document.getElementById('assignment-work-mobile')
 
-        workbtn_desktop.style.display = "block"
-        workbtn_mobile.style.display = "block"
+        workbtn_desktop.style.display = "block";
+        workbtn_mobile.style.display = "block";
+        stevehunger.style.display = "none";
+
+    } 
+    else if (code.value.toString().trim() == "stevehunger"){
+        if (supportMedia_W.matches && supportMedia_H.matches) {
+            stevehunger.style.display = "flex";
+            if (gameStarted) {
+                lavaArea.style.display = "block";
+            }
+            else {
+                code.value = '';
+                lavaArea.style.display = "none";
+            }
+        }
+        else {
+            stevehunger.style.display = "none";
+            
+        }
+        backHome();
+        workbtn_desktop.style.display = "none";
     }
     else {
-        workbtn_desktop.style.display = "none"
-        workbtn_mobile.style.display = "none"
+        stevehunger.style.display = "none";
+        workbtn_desktop.style.display = "none";
+        workbtn_mobile.style.display = "none";
+    }
+
+
+}
+
+// ---------------------------------------------------------------------------------------------------------------- GAME FUNCTION
+const colors = ['#5d8f23', '#5a8b22', '#537f1f', '#4d761d', '#548120', '#53801f', '#527f1f', '#4e781d'];
+const gridSize = 12;
+let stevePosition = { x: 0, y: 0 };
+let direction = 'right';
+let commandQueue = [];
+let fullness = 10; // Start with full hunger
+let fullnessSpeed = 5000; // 5 second per -1 fullness
+
+let collectedItems = {}; // Track collected items
+let loopCounter = 0; // Counter for loops
+
+const movespeed = 300; // 3 ms
+
+let score = 0;
+let foodItems = [];
+const foodTypes = [
+    { type: 'Apple', points: 1, fullness: 1, displayTime: 120000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/apple.png' },
+    { type: 'Cake', points: 2, fullness: 2, displayTime: 120000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/cake.png' },
+    { type: 'Steak', points: 3, fullness: 3, displayTime: 120000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/steak.png' },
+    { type: 'Golden Apple', points: 4, fullness: 4, displayTime: 80000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/golden-apple.gif' }
+];
+
+// Create the grid
+function createGrid() {
+    const grid = document.getElementById('grid');
+    for (let i = 0; i < gridSize * gridSize; i++) {
+        const div = document.createElement('div');
+        div.className = 'grid-item';
+        // div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        grid.appendChild(div);
     }
 }
+
+// Spawn food items
+
+
+const maxFoodItems = 6; // Maximum number of food items in the area
+
+// Spawn food items
+function spawnFood() {
+    const foodContainer = document.getElementById('food-container');
+    
+    // Get all existing food items
+    const existingFoodItems = document.querySelectorAll('.food-item');
+    
+    // Check if the number of food items is less than the maximum allowed
+    if (existingFoodItems.length >= maxFoodItems) {
+        return; // Exit function if maximum food items are already present
+    }
+
+    // Spawn new food items up to the maximum allowed
+    let foodCount = maxFoodItems - existingFoodItems.length; // Number of new food items to spawn
+
+    while (foodCount > 0) {
+        const foodType = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+        const x = Math.floor(Math.random() * gridSize);
+        const y = Math.floor(Math.random() * gridSize);
+
+        const food = document.createElement('div');
+        food.className = 'food-item';
+        food.style.backgroundImage = `url('${foodType.image}')`;
+        food.style.backgroundPosition = 'center';
+        food.style.backgroundSize = 'cover';
+        food.style.backgroundRepeat = 'no-repeat';
+        food.dataset.type = foodType.type;
+        food.dataset.points = foodType.points;
+        food.dataset.fullness = foodType.fullness;
+        food.dataset.displayTime = foodType.displayTime;
+
+        const timer = document.createElement('div');
+        timer.className = 'food-timer';
+        food.appendChild(timer);
+        
+        // Position the food item randomly in the grid
+        const gridItem = document.querySelector(`.grid-item:nth-child(${y * gridSize + x + 1})`);
+        gridItem.appendChild(food);
+
+        // Start the timer for the food item
+        let displayTime = foodType.displayTime;
+        timer.textContent = Math.ceil(displayTime / 1000);
+        const interval = setInterval(() => {
+            displayTime -= 1000;
+            timer.textContent = Math.ceil(displayTime / 1000);
+            if (displayTime <= 0) {
+                clearInterval(interval);
+                gridItem.removeChild(food);
+                spawnFood(); // Respawn new food
+            }
+        }, 1000);
+
+        foodItems.push(food);
+        foodCount--; // Decrease the count of new food items to spawn
+    }
+}
+
+// Update hunger status
+function updateHungerStatus() {
+    document.getElementById('current-score').innerText = `Score: ${score}`;
+    // document.getElementById('hunger-image').src = `https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-${fullness}.png`;
+    document.getElementById('hunger-image').src = `https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/food-${fullness}.png`;
+    if (fullness <= 0) {
+        gameOver();
+    }
+}
+
+// Initialize Steve's position in the grid
+function placeSteve() {
+    const items = document.querySelectorAll('.grid-item');
+    items.forEach((item, index) => {
+        item.classList.remove('active');
+        if (index === stevePosition.y * gridSize + stevePosition.x) {
+            item.classList.add('active');
+            const steve = document.createElement('div');
+            steve.className = 'steve ' + direction;
+            item.appendChild(steve);
+        }
+    });
+}
+
+// Collect food
+function collectFood(foodItem) {
+    const points = parseInt(foodItem.dataset.points);
+    const fullnessValue = parseInt(foodItem.dataset.fullness);
+    const foodType = foodItem.dataset.type;
+
+    // Update score and fullness
+    score += points;
+    fullness = Math.min(10, fullness + fullnessValue); // Increase fullness, cap at 10
+    updateHungerStatus();
+
+    // Track collected items
+    if (!collectedItems[foodType]) {
+        collectedItems[foodType] = { count: 0, points: 0 };
+    }
+    collectedItems[foodType].count += 1;
+    collectedItems[foodType].points += points;
+
+    // Update display
+    updateCollectedItems();
+
+    // Remove the food item and its timer
+    // const gridItem = foodItem.parentElement;
+    // const timer = gridItem.querySelector('.food-timer');
+    // if (timer) {
+    //     gridItem.removeChild(timer);
+    // }
+    // gridItem.removeChild(foodItem);
+}
+
+// Handle food click event
+function handleFoodClick(event) {
+    const foodItem = event.target.closest('.food-item');
+    if (foodItem) {
+        collectFood(foodItem);
+        const gridItem = foodItem.parentElement;
+        gridItem.removeChild(foodItem);
+        spawnFood(); // Respawn new food
+    }
+}
+
+// Execute commands from the text area
+let lavaArea = document.querySelector('.lavaArea');
+function executeCommand() {
+    if (gameStarted) {
+        lavaArea.style.display = "block";
+        const commandsText = document.getElementById('editor').innerText;
+        commandQueue = parseCommands(commandsText);
+        processCommands();
+    } else {
+        lavaArea.style.display = "none";
+    }
+}
+
+function parseCommands(commandsText) {
+    const commandQueue = [];
+    const lines = commandsText.split('\n');
+    let loopCommands = [];
+    let inLoop = false;
+    let loopCount = 0;
+    let loopIndent = 0;
+
+    lines.forEach(line => {
+        const trimmedLine = line.trim();
+        const currentIndent = line.search(/\S/);
+
+        if (trimmedLine.startsWith("for ") && trimmedLine.includes(" in range(")) {
+            inLoop = true;
+            loopCount = parseInt(trimmedLine.match(/range\((\d+)\):/)[1], 10);
+            loopIndent = currentIndent;
+        } else if (inLoop && currentIndent > loopIndent) {
+            loopCommands.push(trimmedLine);
+        } else if (inLoop && currentIndent <= loopIndent) {
+            // End of loop commands
+            for (let i = 0; i < loopCount; i++) {
+                loopCommands.forEach(loopCommand => {
+                    commandQueue.push(loopCommand);
+                });
+            }
+            inLoop = false;
+            loopCommands = [];
+            if (trimmedLine.startsWith("print(")) {
+                commandQueue.push(trimmedLine);
+            }
+        } else if (!inLoop && trimmedLine.startsWith("print(")) {
+            commandQueue.push(trimmedLine);
+        }
+    });
+
+    // If still in loop after the last line
+    if (inLoop) {
+        for (let i = 0; i < loopCount; i++) {
+            loopCommands.forEach(loopCommand => {
+                commandQueue.push(loopCommand);
+            });
+        }
+    }
+
+    return commandQueue;
+}
+
+function processCommands() {
+    if (commandQueue.length > 0) {
+        const command = commandQueue.shift().trim();
+        if (command === "print('w')" || command === 'print("w")') {
+            moveForward();
+        } else if (command === "print('s')" || command === 'print("s")') {
+            moveBackward();
+        } else if (command === "print('d')" || command === 'print("d")') {
+            turnRight();
+        } else if (command === "print('a')" || command === 'print("a")') {
+            turnLeft();
+        }
+        setTimeout(processCommands, movespeed);
+    }
+}
+
+// The rest of your game code remains unchanged
+
+
+
+function collectFoodIfPresent() {
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x + 1;
+    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex})`);
+    const foodItem = gridItem.querySelector('.food-item');
+
+    if (foodItem) {
+        collectFood(foodItem);
+        gridItem.removeChild(foodItem);
+        spawnFood(); // Respawn new food
+    }
+}
+
+
+
+// Move Steve forward based on direction
+function moveForward() {
+    const items = document.querySelectorAll('.grid-item');
+    items.forEach((item) => {
+        const steve = item.querySelector('.steve');
+        if (steve) {
+            item.removeChild(steve);
+        }
+    });
+
+    if (direction === 'right') {
+        if (stevePosition.x < gridSize - 1) {
+            stevePosition.x += 1;
+        }else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'left') {
+        if (stevePosition.x > 0) {
+            stevePosition.x -= 1;
+        }else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'up') {
+        if (stevePosition.y > 0) {
+            stevePosition.y -= 1;
+        }else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'down') {
+        if (stevePosition.y < gridSize - 1) {
+            stevePosition.y += 1;
+        }else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    }
+
+    placeSteve();
+    collectFoodIfPresent();
+}
+
+// Move Steve backward based on direction
+function moveBackward() {
+    const items = document.querySelectorAll('.grid-item');
+    items.forEach((item) => {
+        const steve = item.querySelector('.steve');
+        if (steve) {
+            item.removeChild(steve);
+        }
+    });
+
+    if (direction === 'right') {
+        if (stevePosition.x > 0) {
+            stevePosition.x -= 1;
+        } else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'left') {
+        if (stevePosition.x < gridSize - 1) {
+            stevePosition.x += 1;
+        } else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'up') {
+        if (stevePosition.y < gridSize - 1) {
+            stevePosition.y += 1;
+        } else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    } else if (direction === 'down') {
+        if (stevePosition.y > 0) {
+            stevePosition.y -= 1;
+        } else {
+            gameOver(); // End game if moving out of bounds
+            return;
+        }
+    }
+
+    placeSteve();
+    collectFoodIfPresent();
+}
+
+// Turn Steve right
+function turnRight() {
+    if (direction === 'right') {
+        direction = 'down';
+    } else if (direction === 'down') {
+        direction = 'left';
+    } else if (direction === 'left') {
+        direction = 'up';
+    } else if (direction === 'up') {
+        direction = 'right';
+    }
+    updateSteveDirection();
+}
+
+// Turn Steve left
+function turnLeft() {
+    if (direction === 'right') {
+        direction = 'up';
+    } else if (direction === 'up') {
+        direction = 'left';
+    } else if (direction === 'left') {
+        direction = 'down';
+    } else if (direction === 'down') {
+        direction = 'right';
+    }
+    updateSteveDirection();
+}
+
+// Update Steve's direction display
+function updateSteveDirection() {
+    const items = document.querySelectorAll('.grid-item');
+    items.forEach((item, index) => {
+        const steve = item.querySelector('.steve');
+        if (steve) {
+            steve.className = 'steve ' + direction;
+        }
+    });
+}
+
+let gameStarted = false; // To track if the game has started
+let fullnessInterval; // Declare a variable to store the interval ID
+
+// Start the game
+function startGame() {
+    
+
+    let lavaArea = document.querySelector(".lavaArea");
+    if (!gameStarted) {
+        fullness = 10;
+        updateHungerStatus();
+        lavaArea.style.display = "block";
+        createGrid();
+        placeSteve();
+        spawnFood(); // Start spawning food
+        fullnessInterval = setInterval(() => {
+            if (fullness > 0) {
+                fullness-=0.5;
+                updateHungerStatus();
+            }
+        }, fullnessSpeed); // Every 5 seconds
+
+        document.getElementById('start-button').style.display = 'none'; // Hide start button
+        document.getElementById('hunger-image').style.display = 'block'; // Show hunger status image
+        gameStarted = true;
+    }
+   
+}
+
+function exitGame(){
+
+    gameStarted = false;
+    fullness = 0;
+    updateHungerStatus();
+    score = 0;
+    direction = 'right';
+    stevePosition = { x: 0, y: 0 };
+    collectedItems = {}; 
+    updateCollectedItems(); 
+    document.getElementById('grid').innerHTML = ''; 
+    document.getElementById('current-score').innerText = 'Score: 0';
+    clearInterval(fullnessInterval); 
+    document.getElementById('start-button').style.display = 'block'; // Hide start button
+    document.getElementById('hunger-image').style.display = 'none'; // Show hunger status image
+    document.getElementById('minecraft-content').style.display = 'none';
+    closeModal();
+    
+}
+
+
+// Add event listener for the start button
+document.getElementById('start-button').addEventListener('click', startGame);
+
+// Show popup modal with the score
+function showModal() {
+    document.getElementById('score').innerText = `Your score: ${score}`;
+    document.getElementById('scoreModal').style.display = 'flex';
+}
+
+// Close the modal
+function closeModal() {
+    document.getElementById('scoreModal').style.display = 'none';
+}
+
+
+function restartGame() {
+    fullness = 10;
+    score = 0;
+    direction = 'right';
+    stevePosition = { x: 0, y: 0 };
+    collectedItems = {}; // Reset collected items
+    updateCollectedItems(); // Update collected items display
+    updateHungerStatus();
+    closeModal();
+    document.getElementById('grid').innerHTML = ''; // Clear the grid
+    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
+    createGrid();
+    placeSteve();
+    spawnFood();
+    gameStarted = true;
+}
+
+function backHome(){
+    gameStarted = false;
+    let lavaArea = document.querySelector(".lavaArea");
+    lavaArea.style.display = "none";
+    fullness = 0;
+    score = 0;
+    direction = 'right';
+    stevePosition = { x: 0, y: 0 };
+    collectedItems = {}; // Reset collected items
+    updateCollectedItems(); // Update collected items display
+    updateHungerStatus();
+    document.getElementById('grid').innerHTML = ''; // Clear the grid
+    closeModal();
+    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
+    document.getElementById('start-button').style.display = 'block'; // Hide start button
+    document.getElementById('hunger-image').style.display = 'none'; // Show hunger status image
+
+}
+
+
+
+// Update the display of collected items
+function updateCollectedItems() {
+    const itemsList = document.getElementById('items-list');
+    itemsList.innerHTML = ''; // Clear the list first
+
+    for (const [type, { count, points }] of Object.entries(collectedItems)) {
+        const listItem = document.createElement('li');
+        const divfoodItem = document.createElement('div')
+        divfoodItem.style.display = 'flex';
+        divfoodItem.style.flexDirection = 'column';
+
+        const listItemCount = document.createElement('span');
+        const listItemScore = document.createElement('span');
+        listItemScore.className = 'foodScoreLabel';
+        
+        const foodImg = document.createElement('img');
+        foodImg.src = foodTypes.find(food => food.type === type).image;
+        foodImg.width = 30;
+        foodImg.height = 30;
+
+        // const textNode = document.createTextNode(` ${type} x ${count}\t\n(${points} points)`);
+        const textNode = document.createTextNode(` ${type} x ${count}`);
+        const textNode2 = document.createTextNode(`(${points} points)`);
+
+        listItemCount.appendChild(textNode);
+        listItemScore.appendChild(textNode2);
+
+        divfoodItem.appendChild(listItemCount);
+        divfoodItem.appendChild(listItemScore);
+
+        listItem.appendChild(foodImg);
+        listItem.appendChild(divfoodItem);
+
+        itemsList.appendChild(listItem);
+    }
+}
+
+
+
+// Handle game over
+function gameOver() {
+    commandQueue = [];
+    showModal();
+    gameStarted = false;
+}
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------END GAME FUNCTION
