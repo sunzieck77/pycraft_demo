@@ -743,13 +743,14 @@ let stevePosition = { x: 0, y: 0 };
 let direction = 'right';
 let commandQueue = [];
 let fullness = 10; // Start with full hunger
-let fullnessSpeed = 5000; // 5 second per -1 fullness
+let fullnessSpeed = 6000; // 6 second per -1 fullness
 
 let collectedItems = {}; // Track collected items
 let loopCounter = 0; // Counter for loops
 
-const movespeed = 300; // 3 ms
-
+const normalMoveSpeed = 300; // Normal move speed in milliseconds
+const soulSandSpeed = 600; // Slower move speed in milliseconds
+let movespeed = normalMoveSpeed;
 
 let score = 0;
 let foodItems = [];
@@ -782,11 +783,53 @@ const textures = {
         'https://i.ibb.co/TPRDz4F/deep-diamond-texture.jpg',
         'https://i.ibb.co/b3yxFrF/sculk-texture.png'
     ],
-    33: [
-        'https://i.ibb.co/b3yxFrF/sculk-texture.png'
+    38: [
+        'https://i.ibb.co/b3yxFrF/sculk-texture.png',
+        'https://i.ibb.co/ZY5cvn5/sculk-deep-stone-texture.png'
+    ],
+    50: [
+        'https://i.ibb.co/VxRHdxD/nether-rack.jpg',
+        'https://i.ibb.co/phfm40S/gold-ingot.jpg',
+        // 'https://i.ibb.co/WcJ4DkC/soul-sand.png'
     ]
+    
 };
 
+function preloadImages(imageUrls, callback) {
+    let loadedImages = 0;
+    const totalImages = imageUrls.length;
+
+    imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+            loadedImages++;
+            if (loadedImages === totalImages) {
+                callback();
+            }
+        };
+        img.onerror = () => {
+            console.error(`Failed to load image: ${url}`);
+            loadedImages++;
+            if (loadedImages === totalImages) {
+                callback();
+            }
+        };
+    });
+}
+
+function loadAllTextures(callback) {
+    const allTextures = [];
+
+    for (const key in textures) {
+        if (textures.hasOwnProperty(key)) {
+            allTextures.push(...textures[key]);
+        }
+    }
+
+    preloadImages(allTextures, callback);
+}
+loadAllTextures(startGame);
 
 // Create the grid
 function createGrid() {
@@ -797,6 +840,40 @@ function createGrid() {
         grid.appendChild(div);
     }
 }
+
+function addSoulSandBlocks() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    const numSoulSandBlocks = Math.floor(gridSize * gridSize * 0.1); // Adjust density as needed
+
+    if (score > 50) {
+        // Remove previous soul sand blocks
+        gridItems.forEach(item => {
+            item.classList.remove('soul-sand');
+            item.style.backgroundImage = '';
+        });
+    
+        for (let i = 0; i < numSoulSandBlocks; i++) {
+            const index = Math.floor(Math.random() * gridItems.length);
+            const gridItem = gridItems[index];
+            gridItem.classList.add('soul-sand');
+            gridItem.style.backgroundImage = 'url("https://i.ibb.co/WcJ4DkC/soul-sand.png")';
+            gridItem.style.backgroundSize = 'cover';
+            gridItem.style.backgroundRepeat = 'no-repeat';
+        }
+    }
+}
+
+function checkForSoulSandBlock() {
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x;
+    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex + 1})`);
+    
+    if (gridItem.classList.contains('soul-sand')) {
+        movespeed = soulSandSpeed; // Slow down movement speed
+    } else {
+        movespeed = normalMoveSpeed; // Normal movement speed
+    }
+}
+
 
 // Turn some blocks into lava blocks based on the score
 function updateBlocksForChallenge() {
@@ -831,8 +908,10 @@ function updateBlocksForChallenge() {
 function updateGroundTexture(score) {
     let applicableTextures = [];
 
-    if (score > 33) {
-        applicableTextures = textures[33];
+    if (score > 50) {
+        applicableTextures = textures[50];
+    } else if (score > 38) {
+        applicableTextures = textures[38];
     } else if (score > 30) {
         applicableTextures = textures[30];
     } else if (score > 10) {
@@ -841,16 +920,17 @@ function updateGroundTexture(score) {
         applicableTextures = textures[8];
     } else if (score > 5) {
         applicableTextures = textures[5];
-    } else {
+    }
+    else {
         return;
     }
-
-    console.log('Score received:', score);
-    console.log('Applicable textures:', applicableTextures);
 
     const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(item => {
+        if (item.classList.contains('soul-sand')) {
+            return;
+        }
         if (!item.classList.contains('lava-block')) { // Ensure lava blocks are not overwritten
             const randomTexture = applicableTextures[Math.floor(Math.random() * applicableTextures.length)];
             console.log('Setting background image to:', `url(${randomTexture})`);
@@ -969,6 +1049,7 @@ function collectFood(foodItem) {
     fullness = Math.min(10, fullness + fullnessValue); // Increase fullness, cap at 10
     updateHungerStatus();
     updateBlocksForChallenge();
+    addSoulSandBlocks();
     updateGroundTexture(score); 
   
 
@@ -1145,6 +1226,7 @@ function moveForward() {
 
     placeSteve();
     collectFoodIfPresent();
+    checkForSoulSandBlock(); // Check if Steve is on a soul sand block
     checkForLavaBlock(); // Check if Steve is on a lava block
 }
 
@@ -1191,6 +1273,7 @@ function moveBackward() {
 
     placeSteve();
     collectFoodIfPresent();
+    checkForSoulSandBlock(); // Check if Steve is on a soul sand block
     checkForLavaBlock(); // Check if Steve is on a lava block
 }
 
@@ -1247,6 +1330,7 @@ function startGame() {
         placeSteve();
         spawnFood(); // Start spawning food
         updateBlocksForChallenge(); // Update lava blocks based on score
+        addSoulSandBlocks(); // Add soul sand blocks to the grid
 
         fullnessInterval = setInterval(() => {
             if (fullness > 0) {
@@ -1310,6 +1394,7 @@ function restartGame() {
     document.getElementById('grid').innerHTML = ''; // Clear the grid
     document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
     createGrid();
+    addSoulSandBlocks();
     placeSteve();
     spawnFood();
     gameStarted = true;
