@@ -743,7 +743,7 @@ let stevePosition = { x: 0, y: 0 };
 let direction = 'right';
 let commandQueue = [];
 let fullness = 10; // Start with full hunger
-let fullnessSpeed = 12000; // 12 second per -1 fullness
+let fullnessSpeed = 12000; // 6 second per -1 fullness
 
 let collectedItems = {}; // Track collected items
 let loopCounter = 0; // Counter for loops
