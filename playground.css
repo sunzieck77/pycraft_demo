@@ -3021,7 +3021,7 @@ button[disabled] {
     grid-template-columns: repeat(var(--grid-size1), var(--grid-size2));
     grid-template-rows: repeat(var(--grid-size1), var(--grid-size2));
     background-color: #5d8f23;
-    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/pycraft-game.png');
+    background: url('https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/pycraft-game.jpg');
     background-position: center;
     background-size: cover;
     padding: 0;

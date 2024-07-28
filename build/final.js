@@ -743,7 +743,7 @@ let stevePosition = { x: 0, y: 0 };
 let direction = 'right';
 let commandQueue = [];
 let fullness = 10; // Start with full hunger
-let fullnessSpeed = 6000; // 6 second per -1 fullness
+let fullnessSpeed = 10000; // 10 second per -1 fullness
 
 let collectedItems = {}; // Track collected items
 let loopCounter = 0; // Counter for loops
@@ -819,14 +819,18 @@ function preloadImages(imageUrls, callback) {
 }
 
 function loadAllTextures(callback) {
-    const allTextures = [];
-
+    const allTextures = ["https://i.ibb.co/WcJ4DkC/soul-sand.png",
+        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-right.png",
+        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-left.png",
+        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-up.png",
+        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-down.png"];
     for (const key in textures) {
         if (textures.hasOwnProperty(key)) {
             allTextures.push(...textures[key]);
         }
     }
 
+    console.log(allTextures);
     preloadImages(allTextures, callback);
 }
 loadAllTextures(startGame);
