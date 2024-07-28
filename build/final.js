@@ -1080,7 +1080,7 @@ let lavaArea = document.querySelector('.lavaArea');
 function executeCommand() {
     if (gameStarted) {
         lavaArea.style.display = "block";
-        const commandsText = document.getElementById('editor').innerText;
+        const commandsText = document.getElementById('editor').innerText.toLocaleLowerCase();
         commandQueue = parseCommands(commandsText);
         processCommands();
     } else {
