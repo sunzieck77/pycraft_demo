@@ -752,6 +752,9 @@ const normalMoveSpeed = 300; // Normal move speed in milliseconds
 const soulSandSpeed = 600; // Slower move speed in milliseconds
 let movespeed = normalMoveSpeed;
 
+let portal1Position = { x: null, y: null };
+let portal2Position = { x: null, y: null };
+
 let score = 0;
 let foodItems = [];
 const foodTypes = [
@@ -820,6 +823,7 @@ function preloadImages(imageUrls, callback) {
 
 function loadAllTextures(callback) {
     const allTextures = ["https://i.ibb.co/WcJ4DkC/soul-sand.png",
+        "https://i.ibb.co/qxyzJCB/portal-texture.gif",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-right.png",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-left.png",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-up.png",
@@ -843,6 +847,72 @@ function createGrid() {
         div.className = 'grid-item';
         grid.appendChild(div);
     }
+}
+
+function addPortalsToGrid() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    let portal1Placed = false;
+    let portal2Placed = false;
+    if (score > 28 && score < 50){
+    
+        // Clear existing portals
+        gridItems.forEach(item => {
+            if (item.classList.contains('portal1') || item.classList.contains('portal2')) {
+                item.classList.remove('portal1', 'portal2');
+                item.style.backgroundImage = ''; // Make sure this does not affect other items
+            }
+        });
+    
+        // Place portal1
+        while (!portal1Placed) {
+            const index = Math.floor(Math.random() * gridItems.length);
+            const gridItem = gridItems[index];
+            if (!gridItem.classList.contains('portal1') && !gridItem.classList.contains('portal2')) {
+                gridItem.classList.add('portal1');
+                gridItem.style.backgroundImage = 'url("https://i.ibb.co/qxyzJCB/portal-texture.gif")';
+                portal1Placed = true;
+                portal1Position = { x: index % gridSize, y: Math.floor(index / gridSize) };
+            }
+        }
+    
+        // Place portal2
+        while (!portal2Placed) {
+            const index = Math.floor(Math.random() * gridItems.length);
+            const gridItem = gridItems[index];
+            if (!gridItem.classList.contains('portal1') && !gridItem.classList.contains('portal2')) {
+                gridItem.classList.add('portal2');
+                gridItem.style.backgroundImage = 'url("https://i.ibb.co/qxyzJCB/portal-texture.gif")';
+                portal2Placed = true;
+                portal2Position = { x: index % gridSize, y: Math.floor(index / gridSize) };
+            }
+        }
+    } else {
+               // Clear existing portals
+               gridItems.forEach(item => {
+                if (item.classList.contains('portal1') || item.classList.contains('portal2')) {
+                    item.classList.remove('portal1', 'portal2');
+                    item.style.backgroundImage = ''; // Make sure this does not affect other items
+                }
+            });
+    }
+}
+// Function to check for portals and teleport Steve
+function checkForPortals() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x;
+    const currentGridItem = gridItems[currentIndex];
+
+    if (currentGridItem.classList.contains('portal1')) {
+        // Teleport from portal1 to portal2
+        stevePosition.x = portal2Position.x;
+        stevePosition.y = portal2Position.y;
+    } else if (currentGridItem.classList.contains('portal2')) {
+        // Teleport from portal2 to portal1
+        stevePosition.x = portal1Position.x;
+        stevePosition.y = portal1Position.y;
+    }
+
+
 }
 
 function addSoulSandBlocks() {
@@ -932,8 +1002,10 @@ function updateGroundTexture(score) {
     const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(item => {
-        if (item.classList.contains('soul-sand')) {
-            return;
+        if (item.classList.contains('soul-sand') || 
+        item.classList.contains('portal1') || 
+        item.classList.contains('portal2')) {
+        return;
         }
         if (!item.classList.contains('lava-block')) { // Ensure lava blocks are not overwritten
             const randomTexture = applicableTextures[Math.floor(Math.random() * applicableTextures.length)];
@@ -1054,7 +1126,9 @@ function collectFood(foodItem) {
     updateHungerStatus();
     updateBlocksForChallenge();
     addSoulSandBlocks();
+    addPortalsToGrid();
     updateGroundTexture(score); 
+    
   
 
     // Track collected items
@@ -1066,6 +1140,7 @@ function collectFood(foodItem) {
 
     // Update display
     updateCollectedItems();
+    
 }
 
 // Handle food click event
@@ -1155,7 +1230,6 @@ function processCommands() {
     }
 }
 
-// The rest of your game code remains unchanged
 
 
 
@@ -1232,6 +1306,7 @@ function moveForward() {
     collectFoodIfPresent();
     checkForSoulSandBlock(); // Check if Steve is on a soul sand block
     checkForLavaBlock(); // Check if Steve is on a lava block
+    checkForPortals(); // Check if Steve is on a portal block
 }
 
 
@@ -1279,6 +1354,7 @@ function moveBackward() {
     collectFoodIfPresent();
     checkForSoulSandBlock(); // Check if Steve is on a soul sand block
     checkForLavaBlock(); // Check if Steve is on a lava block
+    checkForPortals(); // Check if Steve is on a portal block
 }
 
 // Turn Steve right
@@ -1335,6 +1411,7 @@ function startGame() {
         spawnFood(); // Start spawning food
         updateBlocksForChallenge(); // Update lava blocks based on score
         addSoulSandBlocks(); // Add soul sand blocks to the grid
+        addPortalsToGrid();
 
         fullnessInterval = setInterval(() => {
             if (fullness > 0) {
@@ -1399,6 +1476,7 @@ function restartGame() {
     document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
     createGrid();
     addSoulSandBlocks();
+    addPortalsToGrid();
     placeSteve();
     spawnFood();
     gameStarted = true;
