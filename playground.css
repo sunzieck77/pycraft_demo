@@ -732,7 +732,7 @@
 
 @font-face {
     font-family: "Monocraft";
-    src: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/fonts/Monocraft-no-ligatures.ttf") format("ttf"),url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/fonts/Monocraft-no-ligatures.woff") format("woff");
+    src: url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/fonts/Monocraft-no-ligatures.woff2") format("woff2"),url("https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/fonts/Monocraft-no-ligatures.woff") format("woff");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
