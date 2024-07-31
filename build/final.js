@@ -1,3 +1,4 @@
+//#region Ace editor library
 ! function(e) {
     var t = {};
 
@@ -335,14 +336,6 @@
         
     };
     
-    
-
-
-
-
-
-
-
 
     L(), $(window).resize(L);
     let T = !1;
@@ -417,7 +410,11 @@
         const o = x.getValue() + e;
         x.setValue(o, 1);
         A = x.getValue();
-        x.focus();
+        if (gameStarted){
+            k.focus();
+        }else {
+            x.focus();
+        }
     });
 
     E.on("disconnect", e => {
@@ -732,9 +729,8 @@ function submit_input() {
         workbtn_desktop.style.display = "none";
         workbtn_mobile.style.display = "none";
     }
-
-
 }
+//#endregion
 
 // ---------------------------------------------------------------------------------------------------------------- GAME FUNCTION
 
@@ -744,6 +740,8 @@ let direction = 'right';
 let commandQueue = [];
 let fullness = 10; // Start with full hunger
 let fullnessSpeed = 13000; // 13 second per -1 fullness
+
+const maxFoodItems = 6; //maximum spawn food in grid
 
 let collectedItems = {}; // Track collected items
 let loopCounter = 0; // Counter for loops
@@ -911,8 +909,6 @@ function checkForPortals() {
         stevePosition.x = portal1Position.x;
         stevePosition.y = portal1Position.y;
     }
-
-
 }
 
 function addSoulSandBlocks() {
@@ -948,9 +944,8 @@ function checkForSoulSandBlock() {
     }
 }
 
-
 // Turn some blocks into lava blocks based on the score
-function updateBlocksForChallenge() {
+function addLavaBlock() {
     const gridItems = document.querySelectorAll('.grid-item');
     const maxLavaBlocks = 5;
     
@@ -976,6 +971,16 @@ function updateBlocksForChallenge() {
             gridItem.style.backgroundSize = 'cover';
             gridItem.style.backgroundRepeat = 'no-repeat';
         });
+    }
+}
+
+// Check if Steve is on a lava block
+function checkForLavaBlock() {
+    const currentIndex = stevePosition.y * gridSize + stevePosition.x + 1;
+    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex})`);
+    
+    if (gridItem.classList.contains('lava-block')) {
+        gameOver(); // End game if Steve is on a lava block
     }
 }
 
@@ -1015,11 +1020,6 @@ function updateGroundTexture(score) {
     });
 }
 
-
-
-
-const maxFoodItems = 6; // Maximum number of food items in the area
-
 // Spawn food items
 function spawnFood() {
     const foodContainer = document.getElementById('food-container');
@@ -1045,8 +1045,6 @@ function spawnFood() {
         const foodType = foodTypes[Math.floor(Math.random() * foodTypes.length)];
         let x, y;
         let gridItemIndex;
-
-        // Find a suitable grid item that is not a lava block and does not already have a food item
         do {
             x = Math.floor(Math.random() * gridSize);
             y = Math.floor(Math.random() * gridSize);
@@ -1090,7 +1088,6 @@ function spawnFood() {
     }
 }
 
-
 // Update hunger status
 function updateHungerStatus() {
     document.getElementById('current-score').innerText = `Score: ${score}`;
@@ -1123,14 +1120,13 @@ function collectFood(foodItem) {
     // Update score and fullness
     score += points;
     fullness = Math.min(10, fullness + fullnessValue); // Increase fullness, cap at 10
+
     updateHungerStatus();
-    updateBlocksForChallenge();
+    addLavaBlock();
     addSoulSandBlocks();
     addPortalsToGrid();
     updateGroundTexture(score); 
     
-  
-
     // Track collected items
     if (!collectedItems[foodType]) {
         collectedItems[foodType] = { count: 0, points: 0 };
@@ -1138,9 +1134,7 @@ function collectFood(foodItem) {
     collectedItems[foodType].count += 1;
     collectedItems[foodType].points += points;
 
-    // Update display
     updateCollectedItems();
-    
 }
 
 // Handle food click event
@@ -1154,7 +1148,6 @@ function handleFoodClick(event) {
     }
 }
 
-// Execute commands from the text area
 let lavaArea = document.querySelector('.lavaArea');
 function executeCommand() {
     if (gameStarted) {
@@ -1230,9 +1223,6 @@ function processCommands() {
     }
 }
 
-
-
-
 function collectFoodIfPresent() {
     const currentIndex = stevePosition.y * gridSize + stevePosition.x;
     const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex + 1})`);
@@ -1251,14 +1241,10 @@ function collectFoodIfPresent() {
     }
 }
 
-// Check if Steve is on a lava block
-function checkForLavaBlock() {
-    const currentIndex = stevePosition.y * gridSize + stevePosition.x + 1;
-    const gridItem = document.querySelector(`.grid-item:nth-child(${currentIndex})`);
-    
-    if (gridItem.classList.contains('lava-block')) {
-        gameOver(); // End game if Steve is on a lava block
-    }
+function checkSpecialBlock(){
+    checkForSoulSandBlock(); 
+    checkForLavaBlock();
+    checkForPortals();
 }
 
 
@@ -1304,9 +1290,7 @@ function moveForward() {
 
     placeSteve();
     collectFoodIfPresent();
-    checkForSoulSandBlock(); // Check if Steve is on a soul sand block
-    checkForLavaBlock(); // Check if Steve is on a lava block
-    checkForPortals(); // Check if Steve is on a portal block
+    checkSpecialBlock();
 }
 
 
@@ -1352,9 +1336,7 @@ function moveBackward() {
 
     placeSteve();
     collectFoodIfPresent();
-    checkForSoulSandBlock(); // Check if Steve is on a soul sand block
-    checkForLavaBlock(); // Check if Steve is on a lava block
-    checkForPortals(); // Check if Steve is on a portal block
+    checkSpecialBlock();
 }
 
 // Turn Steve right
@@ -1396,10 +1378,10 @@ function updateSteveDirection() {
     });
 }
 
-let gameStarted = false; // To track if the game has started
-let fullnessInterval; // Declare a variable to store the interval ID
+let gameStarted = false; 
+let fullnessInterval; 
 
-// Start the game
+
 function startGame() {
     let lavaArea = document.querySelector(".lavaArea");
     if (!gameStarted) {
@@ -1408,9 +1390,9 @@ function startGame() {
         lavaArea.style.display = "block";
         createGrid();
         placeSteve();
-        spawnFood(); // Start spawning food
-        updateBlocksForChallenge(); // Update lava blocks based on score
-        addSoulSandBlocks(); // Add soul sand blocks to the grid
+        spawnFood(); 
+        addLavaBlock(); 
+        addSoulSandBlocks(); 
         addPortalsToGrid();
 
         fullnessInterval = setInterval(() => {
@@ -1426,6 +1408,24 @@ function startGame() {
     }
 }
 
+function restartGame() {
+    fullness = 10;
+    score = 0;
+    direction = 'right';
+    stevePosition = { x: 0, y: 0 };
+    collectedItems = {}; // Reset collected items
+    updateCollectedItems(); // Update collected items display
+    updateHungerStatus();
+    closeModal();
+    document.getElementById('grid').innerHTML = ''; // Clear the grid
+    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
+    createGrid();
+    addSoulSandBlocks();
+    addPortalsToGrid();
+    placeSteve();
+    spawnFood();
+    gameStarted = true;
+}
 
 function exitGame(){
 
@@ -1447,7 +1447,24 @@ function exitGame(){
     
 }
 
+function backHome(){
+    gameStarted = false;
+    let lavaArea = document.querySelector(".lavaArea");
+    lavaArea.style.display = "none";
+    fullness = 0;
+    score = 0;
+    direction = 'right';
+    stevePosition = { x: 0, y: 0 };
+    collectedItems = {}; // Reset collected items
+    updateCollectedItems(); // Update collected items display
+    updateHungerStatus();
+    closeModal();
+    document.getElementById('grid').innerHTML = ''; // Clear the grid
+    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
+    document.getElementById('start-button').style.display = 'block'; // Hide start button
+    document.getElementById('hunger-image').style.display = 'none'; // Show hunger status image
 
+}
 // Add event listener for the start button
 document.getElementById('start-button').addEventListener('click', startGame);
 
@@ -1461,47 +1478,6 @@ function showModal() {
 function closeModal() {
     document.getElementById('scoreModal').style.display = 'none';
 }
-
-
-function restartGame() {
-    fullness = 10;
-    score = 0;
-    direction = 'right';
-    stevePosition = { x: 0, y: 0 };
-    collectedItems = {}; // Reset collected items
-    updateCollectedItems(); // Update collected items display
-    updateHungerStatus();
-    closeModal();
-    document.getElementById('grid').innerHTML = ''; // Clear the grid
-    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
-    createGrid();
-    addSoulSandBlocks();
-    addPortalsToGrid();
-    placeSteve();
-    spawnFood();
-    gameStarted = true;
-}
-
-function backHome(){
-    gameStarted = false;
-    let lavaArea = document.querySelector(".lavaArea");
-    lavaArea.style.display = "none";
-    fullness = 0;
-    score = 0;
-    direction = 'right';
-    stevePosition = { x: 0, y: 0 };
-    collectedItems = {}; // Reset collected items
-    updateCollectedItems(); // Update collected items display
-    updateHungerStatus();
-    document.getElementById('grid').innerHTML = ''; // Clear the grid
-    closeModal();
-    document.getElementById('current-score').innerText = 'Score: 0'; // Reset score display
-    document.getElementById('start-button').style.display = 'block'; // Hide start button
-    document.getElementById('hunger-image').style.display = 'none'; // Show hunger status image
-
-}
-
-
 
 // Update the display of collected items
 function updateCollectedItems() {
@@ -1540,14 +1516,11 @@ function updateCollectedItems() {
     }
 }
 
-
-
 // Handle game over
 function gameOver() {
     commandQueue = [];
     showModal();
     gameStarted = false;
 }
-
 
 // --------------------------------------------------------------------------------------------------------------------------------------END GAME FUNCTION
