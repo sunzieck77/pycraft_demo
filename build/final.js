@@ -396,9 +396,9 @@
         t();
         e = e.split(">>>").join(">");
         // clearconsole
-        if (gameStarted) {
-            k.setValue("");
-        }
+        // if (gameStarted) {
+        //     k.setValue("");
+        // }
         
         // Remove the completion message if it exists
         const completionMessage = "=== Code Execution Successful ===";
