@@ -395,11 +395,7 @@
     E.on("output", ({ output: e }) => {
         t();
         e = e.split(">>>").join(">");
-        // clearconsole
-        if (gameStarted) {
-            k.setValue("");
-        }
-        
+   
         // Remove the completion message if it exists
         const completionMessage = "=== Code Execution Successful ===";
         if (e.includes(completionMessage)) {
@@ -410,8 +406,11 @@
         const o = x.getValue() + e;
         x.setValue(o, 1);
         A = x.getValue();
-        if (gameStarted){
+        console.log(gameStarted);
+        // clearconsole
+        if (loadImageStatus){
             k.focus();
+            k.setValue("");
         }else {
             x.focus();
         }
@@ -694,17 +693,19 @@ function submit_input() {
     let supportMedia_W = window.matchMedia("(min-width:1300px)");
     let supportMedia_H = window.matchMedia("(min-height:720px)");
 
-
+    
     document.getElementById('class-content-popup').style.display = 'none';
     workname.innerHTML = name.value + " เลขที่ " + no.value;
+
     if (code.value == "m1" || code.value == "M1") {
         workbtn_desktop = document.getElementById('assignment-work-desktop')
         workbtn_mobile = document.getElementById('assignment-work-mobile')
-
+        
         workbtn_desktop.style.display = "block";
         workbtn_mobile.style.display = "block";
         stevehunger.style.display = "none";
-
+        loadImageStatus = false;
+        
     } 
     else if (code.value.toString().trim() == "stevehunger"){
         if (supportMedia_W.matches && supportMedia_H.matches) {
@@ -725,6 +726,7 @@ function submit_input() {
         workbtn_desktop.style.display = "none";
     }
     else {
+        loadImageStatus = false;
         stevehunger.style.display = "none";
         workbtn_desktop.style.display = "none";
         workbtn_mobile.style.display = "none";
@@ -741,6 +743,8 @@ let commandQueue = [];
 let fullness = 10; // Start with full hunger
 let fullnessSpeed = 13000; // 13 second per -1 fullness
 
+let gameStarted = false; 
+
 const maxFoodItems = 6; //maximum spawn food in grid
 
 let collectedItems = {}; // Track collected items
@@ -749,6 +753,8 @@ let loopCounter = 0; // Counter for loops
 const normalMoveSpeed = 300; // Normal move speed in milliseconds
 const soulSandSpeed = 600; // Slower move speed in milliseconds
 let movespeed = normalMoveSpeed;
+
+let scoreMap = "";
 
 let portal1Position = { x: null, y: null };
 let portal2Position = { x: null, y: null };
@@ -761,6 +767,8 @@ const foodTypes = [
     { type: 'Steak', points: 3, fullness: 3, displayTime: 120000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/steak.png' },
     { type: 'Golden Apple', points: 4, fullness: 4, displayTime: 80000, image: 'https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/food/golden-apple.gif' }
 ];
+
+loadImageStatus = false;
 
 // Textures based on score thresholds
 const textures = {
@@ -820,12 +828,14 @@ function preloadImages(imageUrls, callback) {
 }
 
 function loadAllTextures(callback) {
+    
     const allTextures = ["https://i.ibb.co/WcJ4DkC/soul-sand.png",
         "https://i.ibb.co/qxyzJCB/portal-texture.gif",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-right.png",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-left.png",
         "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-up.png",
-        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-down.png"];
+        "https://raw.githubusercontent.com/sunzieck77/pycraft_demo/main/assets/steve/steve-down.png",
+        "https://minecraft.wiki/images/thumb/Knowledge_Book_JE2.png/120px-Knowledge_Book_JE2.png?c1af4&20190925230326"];
     for (const key in textures) {
         if (textures.hasOwnProperty(key)) {
             allTextures.push(...textures[key]);
@@ -835,6 +845,7 @@ function loadAllTextures(callback) {
     console.log(allTextures);
     preloadImages(allTextures, callback);
 }
+
 loadAllTextures(startGame);
 
 // Create the grid
@@ -851,15 +862,17 @@ function addPortalsToGrid() {
     const gridItems = document.querySelectorAll('.grid-item');
     let portal1Placed = false;
     let portal2Placed = false;
+
+    // Clear existing portals
+    gridItems.forEach(item => {
+        if (item.classList.contains('portal1') || item.classList.contains('portal2')) {
+            item.classList.remove('portal1', 'portal2');
+            item.style.backgroundImage = ''; // Make sure this does not affect other items
+        }
+    });
+
     if (score > 28 && score < 50){
     
-        // Clear existing portals
-        gridItems.forEach(item => {
-            if (item.classList.contains('portal1') || item.classList.contains('portal2')) {
-                item.classList.remove('portal1', 'portal2');
-                item.style.backgroundImage = ''; // Make sure this does not affect other items
-            }
-        });
     
         // Place portal1
         while (!portal1Placed) {
@@ -884,14 +897,6 @@ function addPortalsToGrid() {
                 portal2Position = { x: index % gridSize, y: Math.floor(index / gridSize) };
             }
         }
-    } else {
-               // Clear existing portals
-               gridItems.forEach(item => {
-                if (item.classList.contains('portal1') || item.classList.contains('portal2')) {
-                    item.classList.remove('portal1', 'portal2');
-                    item.style.backgroundImage = ''; // Make sure this does not affect other items
-                }
-            });
     }
 }
 // Function to check for portals and teleport Steve
@@ -915,13 +920,13 @@ function addSoulSandBlocks() {
     const gridItems = document.querySelectorAll('.grid-item');
     const numSoulSandBlocks = Math.floor(gridSize * gridSize * 0.1); // Adjust density as needed
 
+    // Remove previous soul sand blocks
+    gridItems.forEach(item => {
+        item.classList.remove('soul-sand');
+        item.style.backgroundImage = '';
+    });
+
     if (score > 50) {
-        // Remove previous soul sand blocks
-        gridItems.forEach(item => {
-            item.classList.remove('soul-sand');
-            item.style.backgroundImage = '';
-        });
-    
         for (let i = 0; i < numSoulSandBlocks; i++) {
             const index = Math.floor(Math.random() * gridItems.length);
             const gridItem = gridItems[index];
@@ -944,18 +949,24 @@ function checkForSoulSandBlock() {
     }
 }
 
+let addedLava = false;
+let maxLavaBlocks = 10;
+
 // Turn some blocks into lava blocks based on the score
 function addLavaBlock() {
     const gridItems = document.querySelectorAll('.grid-item');
-    const maxLavaBlocks = 5;
     
-    // Remove previous lava blocks
-    gridItems.forEach(item => {
-        item.classList.remove('lava-block');
-        item.style.backgroundImage = ''; // Clear background image for non-lava blocks
-    });
 
-    if (score > 8) {
+    // Remove previous lava blocks
+    if (!addedLava){
+        gridItems.forEach(item => {
+            item.classList.remove('lava-block');
+            item.style.backgroundImage = ''; 
+        });
+    }
+
+    if (scoreMap === "lavaBlock" && !addedLava) {
+        addedLava = true;
         const lavaBlocks = new Set(); // To ensure no duplicate blocks
 
         while (lavaBlocks.size < maxLavaBlocks) {
@@ -984,7 +995,24 @@ function checkForLavaBlock() {
     }
 }
 
+function setMapScoreTexture() {
+    if (score >= 10 && score <= 50){
+        scoreMap = "lavaBlock";
+    } else if (score >= 51 && score <= 80){
+        maxLavaBlocks = 6;
+        addedLava = false;
+    } else if (score >= 81 && score <= 90){
+        scoreMap = "";
+        addedLava = false;
+    }
+    else {
+        scoreMap = "";
+        addedLava = false;
+    }
+}
+
 function updateGroundTexture(score) {
+    setMapScoreTexture();
     let applicableTextures = [];
 
     if (score > 50) {
@@ -1378,13 +1406,11 @@ function updateSteveDirection() {
     });
 }
 
-let gameStarted = false; 
 let fullnessInterval; 
 
-
 function startGame() {
-    let lavaArea = document.querySelector(".lavaArea");
-    if (!gameStarted) {
+    let lavaArea = document.querySelector(".lavaArea");    
+    if (!gameStarted){
         fullness = 10;
         updateHungerStatus();
         lavaArea.style.display = "block";
@@ -1394,25 +1420,29 @@ function startGame() {
         addLavaBlock(); 
         addSoulSandBlocks(); 
         addPortalsToGrid();
-
+    
         fullnessInterval = setInterval(() => {
             if (fullness > 0) {
                 fullness -= 0.5;
                 updateHungerStatus();
             }
         }, fullnessSpeed); // Every 5 seconds
-
+    
         document.getElementById('start-button').style.display = 'none'; // Hide start button
         document.getElementById('hunger-image').style.display = 'block'; // Show hunger status image
         gameStarted = true;
     }
+    
 }
 
 function restartGame() {
+    maxLavaBlocks = 10;
+    addedLava = false;
     fullness = 10;
     score = 0;
     direction = 'right';
     stevePosition = { x: 0, y: 0 };
+    scoreMap = "";
     collectedItems = {}; // Reset collected items
     updateCollectedItems(); // Update collected items display
     updateHungerStatus();
@@ -1428,7 +1458,8 @@ function restartGame() {
 }
 
 function exitGame(){
-
+    maxLavaBlocks = 10;
+    addedLava = false;
     gameStarted = false;
     fullness = 0;
     updateHungerStatus();
@@ -1443,14 +1474,17 @@ function exitGame(){
     document.getElementById('start-button').style.display = 'block'; // Hide start button
     document.getElementById('hunger-image').style.display = 'none'; // Show hunger status image
     document.getElementById('minecraft-content').style.display = 'none';
+    loadImageStatus = false;
     closeModal();
     
 }
 
 function backHome(){
+    loadImageStatus = true;
     gameStarted = false;
     let lavaArea = document.querySelector(".lavaArea");
     lavaArea.style.display = "none";
+    scoreMap = "";
     fullness = 0;
     score = 0;
     direction = 'right';

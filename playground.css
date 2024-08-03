@@ -889,11 +889,15 @@ button {
 .editor-wrapper,
 .terminal-wrapper,
 .ace_editor,
-.ace_scroller,
+/* .ace_scroller, */
 .ace_gutter,
 .ace_gutter-active-line,
 .ace_gutter-cell {
     background: #f5f5f5;
+}
+
+.terminal-wrapper .ace_scroller {
+    border-top: 10px solid #101010;
 }
 
 .ace_scrollbar-v {
@@ -1354,6 +1358,7 @@ button {
 .student-name-div {
     font-family: "Noto Sans Thai";
     padding: 6px;
+    border-top: 10px solid #101010;
     font-size: 13px;
 }
 
@@ -1438,17 +1443,15 @@ button {
     font-family: "Monocraft";
     cursor: pointer;
     padding: 6px 16px;
-    border-left: 2px solid #646160;
-    border-top: 2px solid #646160;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
-    box-sizing: border-box;
-    background-color: #3d3938;
+    color: rgb(255, 255, 255);
+    background-color: #474342;
+    border: 2px solid rgb(0, 0, 0);
+    border-bottom: 5px solid rgb(37, 37, 37);
+    box-shadow: inset 0 2px 0 0 rgba(255, 255, 255, 0.567);
     letter-spacing: .7px;
     font-size: 14px;
     line-height: 20px;
     text-align: center;
-    color: rgb(255, 255, 255);
     text-shadow: 2px 2px black;
     outline: none;
     z-index: 109;
@@ -1456,10 +1459,7 @@ button {
 }
 
 #assignment-work-desktop:hover {
-    border-top: 2px solid #838383;
-    border-left: 2px solid #838383;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
+    border: 2px solid rgb(255, 255, 255);
     background-color: #5c5c5c;
 }
 #assignment-work-mobile {
@@ -1467,27 +1467,34 @@ button {
     font-family: "Monocraft";
     cursor: pointer;
     padding: 6px 16px;
-    border-left: 2px solid #646160;
-    border-top: 2px solid #646160;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
     box-sizing: border-box;
-    background-color: #3d3938;
     background: url("https://minecraft.wiki/images/thumb/Knowledge_Book_JE2.png/120px-Knowledge_Book_JE2.png?c1af4&20190925230326");
+    color: rgb(255, 255, 255);
+    background-color: #474342;
+    border: 2px solid rgb(0, 0, 0);
+    border-bottom: 5px solid rgb(37, 37, 37);
+    box-shadow: inset 0 2px 0 0 rgba(255, 255, 255, 0.567);
     background-position: center;
     background-size: 30px 30px;
     background-repeat: no-repeat;
-    width: 40px;
-    height: 35px;
+    width: 50px;
+    height: 37px;
     letter-spacing: .7px;
     font-size: 14px;
     line-height: 20px;
     text-align: center;
-    color: rgb(255, 255, 255);
     text-shadow: 2px 2px black;
     outline: none;
     z-index: 109;
     font-weight: bold;
+}
+#assignment-work-mobile:hover {
+    border: 2px solid white;
+}
+
+#assignment-work-mobile:active {
+    background-color: rgb(135, 135, 135);
+    border: 2px solid white;
 }
 
 .close-work:hover {
@@ -1495,6 +1502,8 @@ button {
 }
 
 .sidebar-wrapper button {
+    position: relative;
+    right: 5px;
     font-family:"Noto Sans Thai";
     font-size: 15px;
     font-weight: 600;
@@ -1952,10 +1961,10 @@ button {
     cursor: pointer;
     padding: 6px 16px;
     background: #ffa400;
-    border-left: 2px solid #ffdea1 ;
-    border-top: 2px solid #ffdea1 ;
-    border-right: 2px solid #231700 ;
-    border-bottom: 2px solid #231700 ;
+    border: none;
+    border: 2px solid #3e3e3e;
+    border-bottom: 5px solid #171717d4 ;
+    box-shadow:inset 0 2px 0 0 rgba(255, 255, 255, 0.542);
     font-size: 14px;
     line-height: 20px;
     color: rgb(255, 255, 255);
@@ -1966,11 +1975,11 @@ button {
 }
 
 .run:hover {
-    background: #ffb52d;
-    border-left: 2px solid #ffefd1 ;
-    border-top: 2px solid #ffefd1 ;
-    border-right: 2px solid #503400 ;
-    border-bottom: 2px solid #503400 ;
+    color: #ffffff;
+    background-color:#3c8526;
+    border: 2px solid #ffffff;
+    margin-bottom: 3px;
+
 }
 
 .desktop-run-button {
@@ -2016,25 +2025,21 @@ button {
     background: none;
     font-size: 14px;
     line-height: 20px;
-    /* color: rgba(37, 38, 94, 0.7); */
+    box-sizing: border-box;
     outline: none;
     z-index: 109;
+    border: none;
     margin: 0 20px 0 16px;
-    /* border: 1px solid #d3dce6; */
-    border-left: 2px solid #646160;
-    border-top: 2px solid #646160;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
-    box-sizing: border-box;
-    background-color: #3d3938;
     font-family: "Monocraft";
+    color: rgb(255, 255, 255);
+    background-color: #474342;
+    border: 2px solid rgb(0, 0, 0);
+    border-bottom: 5px solid rgb(37, 37, 37);
+    box-shadow: inset 0 2px 0 0 rgba(255, 255, 255, 0.567);
 }
 
 .desktop-clear-button:hover {
-    border-top: 2px solid #838383;
-    border-left: 2px solid #838383;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
+    border: 2px solid white;
     background-color: #5c5c5c;
 }
 
@@ -2112,8 +2117,14 @@ li.option-button button {
 }
 
 .file-name, .shell-name {
-    color: rgb(24, 24, 24);
-    /* background-color: red; */
+    /* color: rgb(24, 24, 24); */
+    box-sizing: border-box;
+    border-top: 5px solid rgba(255, 255, 255, 0.516);
+    border-bottom: 5px solid #747474;
+    height: 100%;
+    color: black;
+    background-color: #c2c2c2;
+    /* height: 30px; */
 }
 
 .file-name {
@@ -2125,7 +2136,7 @@ li.option-button button {
     border-right: 1px solid #d3dce6;
     /* border-top: 1px solid #d3dce6;*/
     border-top: 1px solid #d3dce6;
-    border-bottom: 1px solid rgb(245, 245, 245);
+    /* border-bottom: 1px solid rgb(245, 245, 245); */
     font-family: "Monocraft";
     font-weight: 500;
     font-size: 16px;
@@ -2147,10 +2158,10 @@ li.option-button button {
 .shell-name {
     font-weight: 500;
     line-height: 24px;
-    padding: 11px 18px;
+    padding: 6px 18px;
     font-family: "Monocraft";
     border-top: 1px solid #d3dce6;
-    border-bottom: 1px solid #d3dce6;
+    /* border-bottom: 1px solid #d3dce6; */
 }
 
 .run-icon {
@@ -2221,7 +2232,10 @@ button {
 
 .dark-mode,
 .dark-mode .header {
-    background: #1f2023;
+    background: #242525;
+    border-top: 4px solid rgba(255, 255, 255, 0.072);
+    /* background: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/e/ea/Cracked_Deepslate_Tiles_%28texture%29_JE1.png'); */
+    background-size: 120px 80px ;
 }
 
 .dark-mode .logo-wrapper {
@@ -2234,13 +2248,14 @@ button {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     /* border-bottom: 1px solid #1c2130; */
-    border-bottom: 2px solid white;
+    /* border-bottom: 2px solid white; */
 }
 
 .dark-mode .shell-name {
-    color: #ffffff;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: black;
+    /* border-top: 1px solid rgba(255, 255, 255, 0.2); */
+    border-top: 5px solid rgba(255, 255, 255, 0.516);
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
 }
 
 .dark-mode .wrapper,
@@ -2250,11 +2265,11 @@ button {
 .dark-mode .ace_scroller,
 .dark-mode .ace_gutter-cell,
 .dark-mode .terminal-wrapper {
-    background: #242424;
+    background: #262729;
 }
 
 .dark-mode .ace_editor {
-    border-top: 3px solid rgb(83, 83, 83);
+    /* border-top: 3px solid rgb(83, 83, 83); */
     border-left: 3px solid rgb(83, 83, 83);
 
 }
@@ -2289,27 +2304,37 @@ button {
 }
 
 .dark-mode .logo-wrapper {
-    background: #1f2023;
+    background: transparent;
+    /* background: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/e/ea/Cracked_Deepslate_Tiles_%28texture%29_JE1.png'); */
+    background-size: 120px 80px ;
+    
 }
 
 .dark-mode .mobile-top-bar {
-    background: #2d2f34;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    /* background: #2d2f34;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
+    background-color: #c2c2c2;
+    border-top: 5px solid rgba(255, 255, 255, 0.531);
+    border-bottom: 5px solid rgba(255, 255, 255, 0.2);
 }
+
 
 .dark-mode .pill {
     background: transparent;
-    border: 2px solid rgb(84, 84, 84);
-    color: #858585;
+    /* box-shadow: inset 0 2px 0 0 rgb(227, 227, 227); */
+    border: 2px solid rgb(143, 143, 143);
+    border-bottom: 3px solid rgb(126, 126, 126);
+    color: #8a8a8a;
 }
 
 .dark-mode .pill.active {
-    background: #464646;
+    background: #02a905;
+    border: none;
     color: rgb(255, 255, 255);
-    border-left: 2px solid rgb(159, 159, 159);
-    border-top: 2px solid rgb(159, 159, 159);
-    border-right: 2px solid black;
-    border-bottom: 2px solid black;
+    border: 2px solid rgb(68, 68, 68);
+    border-bottom: 3px solid rgb(23, 68, 15);
+    box-shadow:inset 0 2px 0 0px rgb(212, 212, 212);
+    text-shadow: 2px 2px black;
 }
 
 .dark-mode .spinner .loader {
@@ -2348,13 +2373,18 @@ button {
 
 .dark-mode .desktop-top-bar__btn-wrapper,
 .dark-mode .terminal-desktop-top-bar__btn-wrapper {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #c2c2c2;
+    border-top: 5px solid rgba(255, 255, 255, 0.531);
+    /* border-bottom: 5px solid rgba(255, 255, 255, 0.2); */
+    border-bottom: 5px solid #747474;
 }
 
 .dark-mode .desktop-clear-button {
-    color: #fff;
+    /* color: #fff;
     text-shadow: 2px 2px black;
+    border: 2px solid white;
+    box-shadow:inset 0 0 0 2px black; */
+
 }
 
 .dark-mode .burger-menu-btn svg path {
@@ -2389,9 +2419,10 @@ button {
         border-right: 1px solid rgba(255, 255, 255, 0.2);
     }
     .dark-mode .sidebar-wrapper {
-        background: #383b40;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        background: #c2c2c2;
+        border-top: 5px solid rgba(255, 255, 255, 0.557);
+        /* border-right: 5px solid rgba(0, 0, 0, 0.508); */
+        border-left: 5px solid rgba(255, 255, 255, 0.515);
     }
     .dark-mode .editor-wrapper #toggle-dark-mode-desktop {
         background: transparent;
