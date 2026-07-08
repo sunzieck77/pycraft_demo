@@ -557,7 +557,7 @@
     };
 
     function R(e = !0) {
-        if (e) return k.setTheme("ace/theme/monokai"), x.setTheme("ace/theme/monokai"), $("#logo").attr("src", "assets/logos/logo-inverted.svg"), $("#nav-logo").attr("src", "assets/logos/logo-inverted.svg"), $(".container").addClass("dark-mode"), void $("#toggle-dark-mode-desktop").prop("title", "Toggle light mode");
+        if (e) return k.setTheme("ace/theme/dracula"), x.setTheme("ace/theme/dracula"), $("#logo").attr("src", "assets/logos/logo-inverted.svg"), $("#nav-logo").attr("src", "assets/logos/logo-inverted.svg"), $(".container").addClass("dark-mode"), void $("#toggle-dark-mode-desktop").prop("title", "Toggle light mode");
         k.setTheme("ace/theme/textmate"), x.setTheme("ace/theme/textmate"), $(".container").removeClass("dark-mode"), $("#logo").attr("src", "assets/logos/logo.svg"), $("#nav-logo").attr("src", "assets/logos/logo.svg"), $("#toggle-dark-mode-desktop").prop("title", "Toggle dark mode")
     }
 
